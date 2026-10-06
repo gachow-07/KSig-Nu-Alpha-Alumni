@@ -1,9 +1,10 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, type CSSProperties } from "react";
 import type { AlumniEvent } from "@/content/site";
 import { formatDay, todayIn } from "@/lib/dates";
 import { ArrowRightIcon, CalendarIcon, PinIcon } from "./Icons";
+import Reveal from "./motion/Reveal";
 
 type Props = {
   events: AlumniEvent[];
@@ -26,10 +27,14 @@ export default function EventList({ events, buildDay, timeZone, emptyMessage }: 
         <p className="card mt-10 p-8 text-lg text-muted">{emptyMessage}</p>
       ) : (
         <ul className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {upcoming.map((event) => (
-            <li key={`${event.date}-${event.title}`} className="card flex flex-col p-7 md:p-8">
+          {upcoming.map((event, i) => (
+            <Reveal as="li" key={`${event.date}-${event.title}`} delay={i * 100} className="card flex flex-col p-7 md:p-8">
               <div className="flex items-start gap-4">
-                <div className="flex w-16 shrink-0 flex-col items-center rounded-md bg-primary py-2 text-white">
+                <div
+                  data-anim="pop"
+                  style={{ "--delay": "150ms" } as CSSProperties}
+                  className="flex w-16 shrink-0 flex-col items-center rounded-md bg-primary py-2 text-white"
+                >
                   <span className="text-xs font-bold uppercase tracking-[0.12em]">
                     {formatDay(event.date, { month: "short" })}
                   </span>
@@ -55,15 +60,21 @@ export default function EventList({ events, buildDay, timeZone, emptyMessage }: 
               <h3 className="display mt-6 text-3xl font-extrabold leading-none">{event.title}</h3>
               <p className="mt-3 flex-1 text-muted">{event.description}</p>
 
+              {/* Hover: a soft fill sweeps in from the left and the arrow nudges right.
+                  -mx-3 px-3 widens the hover area without moving the text. */}
               <a
                 href={event.rsvpUrl}
-                className="mt-6 inline-flex min-h-[44px] items-center gap-2 self-start font-bold text-accent underline-offset-4 hover:underline"
+                className="group relative isolate -mx-3 mt-6 inline-flex min-h-[44px] items-center gap-2 self-start rounded-md px-3 font-bold text-accent"
                 {...(event.rsvpUrl.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               >
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 -z-10 origin-left scale-x-0 rounded-md bg-accent/10 transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                />
                 RSVP<span className="sr-only"> for {event.title}</span>
-                <ArrowRightIcon className="h-4 w-4" />
+                <ArrowRightIcon className="h-4 w-4 transition-transform duration-300 ease-out motion-safe:group-hover:translate-x-1" />
               </a>
-            </li>
+            </Reveal>
           ))}
         </ul>
       )}

@@ -1,3 +1,4 @@
+import BackToTop from "@/components/BackToTop";
 import Campaign from "@/components/Campaign";
 import ChapterToday from "@/components/ChapterToday";
 import Events from "@/components/Events";
@@ -28,6 +29,7 @@ export default function Home() {
         <SignupSection />
       </main>
       <Footer />
+      <BackToTop />
     </>
   );
 }
