@@ -14,8 +14,20 @@
  *    grey placeholder box instead.
  *
  * After saving, run `npm run dev` and open http://localhost:3000 to check
- * your change, then commit and push. Vercel redeploys automatically.
+ * your change, then commit and push. GitHub Pages redeploys automatically.
  */
+
+// ---------- Form endpoint (NEW) ----------
+
+/**
+ * Where the PARENT NEWSLETTER form sends sign-ups.
+ * PASTE YOUR FORMSPREE URL BETWEEN THE QUOTES, e.g. "https://formspree.io/f/abcdwxyz"
+ * (Create a free form at https://formspree.io, then copy its endpoint URL.)
+ * While this is empty, the form shows a friendly "not connected yet" message.
+ *
+ * The ALUMNI form doesn't use this: it saves to the Supabase database (see README).
+ */
+export const FORM_ENDPOINT = ""; // PLACEHOLDER
 
 // ---------- Types (you don't need to edit these) ----------
 
@@ -34,9 +46,14 @@ export type ChapterCard = { title: string; description: string; photo: Photo };
 
 export type Officer = { title: string; name: string; headshot?: string };
 
+/** Who an event is for. Shown as a tag and used by the event filters. */
+export type Audience = "Alumni" | "Families" | "Everyone";
+
 export type AlumniEvent = {
   /** Date in YYYY-MM-DD format. The event disappears automatically the day after this date. */
   date: string;
+  /** "Alumni", "Families" or "Everyone" ("Everyone" shows under both filters). */
+  audience: Audience;
   /** Free text, e.g. "6:00 – 9:00 PM". */
   time: string;
   title: string;
@@ -44,6 +61,20 @@ export type AlumniEvent = {
   description: string;
   /** Link to the RSVP form (Google Form, Partiful, Eventbrite, etc.). */
   rsvpUrl: string;
+};
+
+export type FaqItem = { question: string; answer: string };
+
+export type Spotlight = { name: string; pledgeClass: string; role: string; quote: string; photo: Photo };
+
+export type Mentor = { industry: string; name: string; pledgeClass: string };
+
+export type Fund = {
+  id: string;
+  label: string;
+  description: string;
+  /** Optional: a donation link just for this fund. Leave undefined to use campaign.donateUrl. */
+  donateUrl?: string;
 };
 
 // ---------- Site-wide ----------
@@ -75,7 +106,7 @@ export const site = {
   seo: {
     title: "Kappa Sigma Nu Alpha Alumni | Cal Poly",
     description:
-      "Reconnect with the Nu Alpha chapter of Kappa Sigma at Cal Poly San Luis Obispo. Join the alumni list, see the chapter today, and find upcoming alumni events.",
+      "The Nu Alpha chapter of Kappa Sigma at Cal Poly San Luis Obispo, for brothers, alumni and families. See the chapter today, find events, and stay connected.",
   },
 };
 
@@ -84,8 +115,10 @@ export const site = {
  * appears on the landing page (section = its id there).
  */
 export const nav = [
-  { label: "Our story", href: "/story/", section: "story" },
-  { label: "The chapter", href: "/chapter/", section: "today" },
+  { label: "About", href: "/story/", section: "story" },
+  { label: "Chapter Today", href: "/chapter/", section: "today" },
+  { label: "Parents", href: "/parents/", section: "parents" },
+  { label: "Alumni", href: "/alumni/", section: "alumni" },
   { label: "Events", href: "/events/", section: "events" },
   { label: "Give", href: "/give/", section: "give" },
 ];
@@ -100,9 +133,13 @@ export const hero = {
   headlineLine1: "Kappa Sigma",
   headlineLine2: "Nu Alpha",
   intro:
-    "Wherever you landed after Cal Poly, you're still a brother of Nu Alpha. Add your name to the alumni list so we can keep you in the loop on events, mentoring, and the chapter's next chapter.",
-  primaryCta: { label: "Join the alumni list", href: "#signup" },
-  secondaryCta: { label: "See the chapter today", href: "#today" },
+    "Brothers at Cal Poly, alumni wherever they landed, and the families behind them: Nu Alpha is all of us. See what the chapter is doing today, find upcoming events, and stay connected.",
+  // Small buttons under the intro. The first is red; the rest are outlined.
+  buttons: [
+    { label: "For Parents", href: "#parents" },
+    { label: "For Alumni", href: "#alumni" },
+    { label: "Upcoming Events", href: "#events" },
+  ],
   photo: {
     src: undefined, // PLACEHOLDER: wide group photo in front of the house, e.g. "/images/hero-group.jpg"
     alt: "Nu Alpha brothers gathered in front of the chapter house",
@@ -178,16 +215,92 @@ export const chapterToday = {
   ] as Officer[],
 };
 
+// ---------- Parents & Families (NEW) ----------
+
+export const parents = {
+  eyebrow: "Parents & Families",
+  heading: "For parents & families",
+  intro:
+    "Kappa Sigma is one of the largest college fraternities in the country: a brotherhood of students who live, study and serve together. Nu Alpha is our chapter at Cal Poly, chartered in [YEAR]. [PLACEHOLDER] Add a sentence or two, in plain language, about what membership looks like day to day and what families can expect.",
+  // Shown in the same style as the stats band. Keep the [ ] until you have real numbers.
+  stats: [
+    { value: "[#.##]", label: "Chapter GPA" }, // PLACEHOLDER
+    { value: "[#]", label: "Study hours / week" }, // PLACEHOLDER
+    { value: "$[#]", label: "Scholarships awarded" }, // PLACEHOLDER
+    { value: "[###]", label: "Philanthropy hours" }, // PLACEHOLDER
+  ] as Stat[],
+  safety: {
+    heading: "Safety & Accountability",
+    intro: "[PLACEHOLDER] One or two sentences on how the chapter keeps members safe and holds itself accountable.",
+    points: [
+      { title: "Risk management", text: "[PLACEHOLDER] Risk management policies, training, and who is responsible for them." },
+      { title: "GPA requirements", text: "[PLACEHOLDER] Minimum GPA to join and stay active, and what happens if a brother falls below it." },
+      { title: "Standards", text: "[PLACEHOLDER] The chapter's standards board, code of conduct, and how issues are handled." },
+    ],
+  },
+  faqHeading: "Questions parents ask",
+  faq: [
+    { question: "How much does membership cost?", answer: "[PLACEHOLDER] Dues per term, one-time fees, what they cover, and whether payment plans or scholarships are available." },
+    { question: "Does my son have to live in the house?", answer: "[PLACEHOLDER] Live-in requirements (if any), how many brothers live in, and what housing costs." },
+    { question: "What is the time commitment?", answer: "[PLACEHOLDER] Weekly meetings, events, and the new member period, in hours per week." },
+    { question: "How does the chapter support academics?", answer: "[PLACEHOLDER] Study hours, tutoring, academic chair, GPA tracking, and scholarships." },
+    { question: "Who do I contact with questions?", answer: "Reach out to our Parent Liaison below, any time. [PLACEHOLDER] Add other contacts if helpful (chapter advisor, house manager)." },
+  ] as FaqItem[],
+  contact: {
+    heading: "Your point of contact",
+    name: "[Name]", // PLACEHOLDER
+    title: "Parent Liaison",
+    email: "[email]", // PLACEHOLDER: e.g. parents@ksignualpha.com
+    headshot: undefined as string | undefined,
+  },
+  newsletter: {
+    heading: "Get the parent newsletter",
+    intro: "A short update a few times a term: chapter news, events for families, and important dates.",
+    successHeading: "You're subscribed.",
+    successMessage: "Thanks for signing up. Watch your inbox for the next parent newsletter.",
+  },
+};
+
+// ---------- Alumni (NEW) ----------
+
+export const alumni = {
+  eyebrow: "Alumni",
+  heading: "Alumni",
+  intro:
+    "Wherever you landed after Cal Poly, you're still a brother of Nu Alpha. Meet a few of the alumni who stay involved, find a mentor (or become one), and add your name to the list.",
+  spotlightHeading: "Alumni Spotlight",
+  spotlights: [
+    { name: "[Name]", pledgeClass: "[Pledge class]", role: "[Current role]", quote: "[PLACEHOLDER] A short quote about what Nu Alpha means to them.", photo: { src: undefined, alt: "Headshot of [Name]" } },
+    { name: "[Name]", pledgeClass: "[Pledge class]", role: "[Current role]", quote: "[PLACEHOLDER] A short quote about what Nu Alpha means to them.", photo: { src: undefined, alt: "Headshot of [Name]" } },
+    { name: "[Name]", pledgeClass: "[Pledge class]", role: "[Current role]", quote: "[PLACEHOLDER] A short quote about what Nu Alpha means to them.", photo: { src: undefined, alt: "Headshot of [Name]" } },
+  ] as Spotlight[],
+  mentorHeading: "Mentor Network",
+  mentorNote:
+    "Alumni who check \"I'm open to mentoring\" when they reconnect are added here, so current brothers can find someone in their field.",
+  // An officer adds mentors here by hand from the Supabase sign-ups (open_to_mentoring = true).
+  mentors: [
+    { industry: "[Industry]", name: "[Name]", pledgeClass: "[Pledge class]" },
+    { industry: "[Industry]", name: "[Name]", pledgeClass: "[Pledge class]" },
+    { industry: "[Industry]", name: "[Name]", pledgeClass: "[Pledge class]" },
+    { industry: "[Industry]", name: "[Name]", pledgeClass: "[Pledge class]" },
+    { industry: "[Industry]", name: "[Name]", pledgeClass: "[Pledge class]" },
+    { industry: "[Industry]", name: "[Name]", pledgeClass: "[Pledge class]" },
+  ] as Mentor[],
+};
+
 // ---------- Events ----------
 // Past events hide automatically. Order doesn't matter; they're sorted soonest first.
 
 export const events = {
   eyebrow: "Events",
-  heading: "Upcoming alumni events",
+  heading: "Upcoming events",
   emptyMessage: "No events on the calendar right now. Check back soon.",
+  // Filter buttons above the list. "Everyone" events show under every filter.
+  filters: ["All", "Alumni", "Families"] as const,
   list: [
     {
       date: "2026-11-07", // PLACEHOLDER
+      audience: "Everyone",
       time: "11:00 AM – 2:00 PM",
       title: "Homecoming tailgate",
       location: "[Location]",
@@ -195,7 +308,17 @@ export const events = {
       rsvpUrl: "#", // PLACEHOLDER
     },
     {
+      date: "2026-11-21", // PLACEHOLDER
+      audience: "Families",
+      time: "[Time]",
+      title: "Parents' Weekend",
+      location: "[Location]",
+      description: "[PLACEHOLDER] Meet the brothers, tour the house, and spend the weekend in SLO with your son.",
+      rsvpUrl: "#", // PLACEHOLDER
+    },
+    {
       date: "2026-12-05", // PLACEHOLDER
+      audience: "Alumni",
       time: "6:00 – 9:00 PM",
       title: "Bay Area alumni mixer",
       location: "[Location]",
@@ -204,6 +327,7 @@ export const events = {
     },
     {
       date: "2027-04-17", // PLACEHOLDER
+      audience: "Alumni",
       time: "8:00 AM shotgun start",
       title: "Alumni golf tournament",
       location: "[Location]",
@@ -227,6 +351,13 @@ export const campaign = {
   endDate: "2026-12-31", // PLACEHOLDER: YYYY-MM-DD
   donateUrl: "#", // PLACEHOLDER: GiveButter, GoFundMe, or national foundation link
   donateLabel: "Donate now",
+  // Fund picker shown above the Donate button. Give a fund its own donateUrl to send gifts there.
+  fundsLegend: "Choose where your gift goes",
+  funds: [
+    { id: "house", label: "House Improvements", description: "[PLACEHOLDER] Repairs and upgrades to the chapter house." },
+    { id: "scholarships", label: "Brother Scholarships", description: "[PLACEHOLDER] Scholarships for brothers with financial need or academic merit." },
+    { id: "philanthropy", label: "Philanthropy", description: "[PLACEHOLDER] The chapter's philanthropy partners and events." },
+  ] as Fund[],
 };
 
 // ---------- Sign-up form ----------

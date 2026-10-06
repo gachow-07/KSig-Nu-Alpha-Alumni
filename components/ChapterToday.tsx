@@ -1,20 +1,7 @@
-import Image from "next/image";
 import { chapterToday } from "@/content/site";
-import { asset } from "@/lib/paths";
+import Avatar from "./Avatar";
 import Reveal from "./motion/Reveal";
 import PhotoFrame from "./PhotoFrame";
-
-function initials(name: string) {
-  const words = name.replace(/[^\p{L}\s]/gu, "").split(/\s+/).filter(Boolean);
-  if (words.length === 0) return "?";
-  const first = words[0][0];
-  const last = words.length > 1 ? words[words.length - 1][0] : "";
-  return (first + last).toUpperCase();
-}
-
-/** Avatar ring that fades in when the officer's row is hovered. */
-const AVATAR_RING =
-  "ring-2 ring-transparent ring-offset-2 ring-offset-surface transition-shadow duration-300 ease-out group-hover:ring-primary/50";
 
 type Props = {
   /** True when this section is shown on its own page: its title becomes the page's main heading (h1). */
@@ -60,24 +47,7 @@ export default function ChapterToday({ standalone = false }: Props) {
           <ul className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {chapterToday.exec.map((officer, i) => (
               <Reveal as="li" key={officer.title} delay={i * 80} className="group flex items-center gap-4">
-                {officer.headshot ? (
-                  <Image
-                    src={asset(officer.headshot)}
-                    alt={`Headshot of ${officer.name}`}
-                    width={64}
-                    height={64}
-                    data-anim="pop"
-                    className={`h-16 w-16 shrink-0 rounded-full object-cover ${AVATAR_RING}`}
-                  />
-                ) : (
-                  <span
-                    aria-hidden="true"
-                    data-anim="pop"
-                    className={`display flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary text-2xl text-white ${AVATAR_RING}`}
-                  >
-                    {initials(officer.name)}
-                  </span>
-                )}
+                <Avatar name={officer.name} headshot={officer.headshot} />
                 <div>
                   <p className="text-lg font-bold leading-snug">{officer.name}</p>
                   <p className="text-sm text-muted">{officer.title}</p>

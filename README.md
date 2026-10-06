@@ -1,12 +1,13 @@
 # Kappa Sigma Nu Alpha Alumni
 
-The one-page alumni website for the Nu Alpha chapter of Kappa Sigma at Cal Poly San Luis Obispo.
+The outreach website for the Nu Alpha chapter of Kappa Sigma at Cal Poly San Luis Obispo, for alumni **and** parents & families.
 
-It does three things:
+It does four things:
 
 1. **Collects alumni contact info** through a sign-up form. Every sign-up is saved to a Supabase database the chapter can view and export.
 2. **Shows off the chapter**: history, current brothers, and photos.
-3. **Drives donations and event attendance**: a campaign section links to an outside donation page, and an events list shows upcoming alumni events with RSVP links.
+3. **Drives donations and event attendance**: a campaign section (with a fund picker) links to an outside donation page, and an events list shows upcoming events with RSVP links, filterable by Alumni / Families.
+4. **Welcomes parents & families**: chapter stats, safety & accountability, an FAQ, a parent liaison contact, and a parent newsletter sign-up.
 
 **Live site:** https://gachow-07.github.io/KSig-Nu-Alpha-Alumni/
 
@@ -24,6 +25,7 @@ It does three things:
   - [2. Run the site on your computer](#2-run-the-site-on-your-computer)
   - [3. Set up Supabase (the database)](#3-set-up-supabase-the-database)
   - [4. Put the site online with GitHub Pages](#4-put-the-site-online-with-github-pages)
+  - [Connect the parent newsletter](#connect-the-parent-newsletter)
   - [5. Connect the custom domain](#5-connect-the-custom-domain)
 - [Before launch checklist](#before-launch-checklist)
 - [How the code is organized](#how-the-code-is-organized)
@@ -57,8 +59,10 @@ The landing page shows every section in one scroll. Each top-bar button also has
 
 | Button | Page | Section file |
 | --- | --- | --- |
-| Our story | `/story/` | `components/OurStory.tsx` |
-| The chapter | `/chapter/` | `components/ChapterToday.tsx` |
+| About | `/story/` | `components/OurStory.tsx` |
+| Chapter Today | `/chapter/` | `components/ChapterToday.tsx` |
+| Parents | `/parents/` | `components/ParentsSection.tsx` |
+| Alumni | `/alumni/` | `components/AlumniSection.tsx` (includes the Reconnect form) |
 | Events | `/events/` | `components/Events.tsx` |
 | Give | `/give/` | `components/Campaign.tsx` |
 | Reconnect | `/reconnect/` | `components/SignupSection.tsx` |
@@ -77,7 +81,15 @@ Both places use the same content from `content/site.ts`, so an edit there update
 | Remove an old event | Nothing! Past events hide automatically the day after their date |
 | Update donation progress | `campaign.raised`, `campaign.donors` |
 | Change the donation link | `campaign.donateUrl` |
+| Send one fund's gifts to its own page | Add `donateUrl: "https://..."` to that fund in `campaign.funds` |
+| Say who an event is for | `audience: "Alumni"`, `"Families"` or `"Everyone"` on the event (Everyone shows under both filters) |
+| Update the parent stats, FAQ, or liaison | `parents.stats`, `parents.faq`, `parents.contact` |
+| Change the alumni spotlights | `alumni.spotlights` |
+| Add a mentor | Copy a block in `alumni.mentors` (see the mentor note below) |
+| Connect the parent newsletter form | `FORM_ENDPOINT` at the top of the file (see [Connect the parent newsletter](#connect-the-parent-newsletter)) |
 | Change the email / Instagram / LinkedIn | `footer` |
+
+> **Mentor note:** the Mentor Network is curated by hand so nobody's name goes public without asking. In Supabase, open **Table Editor → alumni**, filter `open_to_mentoring` = true, check with each person, then add them to `alumni.mentors`.
 
 > **Events note:** visitors' browsers hide events once their date has passed (Pacific time), and the site also rebuilds itself every night around 1 AM Pacific.
 
@@ -191,6 +203,16 @@ You can do steps 1, 2 and 4 before Supabase is ready. The page will look right, 
 
 **Tip:** on the repo's main page, click ⚙️ next to **About** and tick **Use your GitHub Pages website** so the link shows at the top of the repo.
 
+### Connect the parent newsletter
+
+The parent newsletter form doesn't use Supabase. It posts to a form service so sign-ups land in an inbox or spreadsheet. [Formspree](https://formspree.io) is free for up to 50 submissions a month:
+
+1. Create a Formspree account and a new form. Copy its endpoint URL (it looks like `https://formspree.io/f/abcdwxyz`).
+2. Paste it into `FORM_ENDPOINT` near the top of `content/site.ts`: `export const FORM_ENDPOINT = "https://formspree.io/f/abcdwxyz";`
+3. Commit. After the site rebuilds, submit a test sign-up and check Formspree.
+
+Until it's set, the form shows "Sign-ups aren't connected yet." The hidden spam-trap field is named `_gotcha`, which Formspree also filters on. Any service that accepts a JSON POST works too.
+
 ### 5. Connect the custom domain
 
 Once `ksignualpha.com` is purchased:
@@ -215,6 +237,11 @@ Fill these in `content/site.ts` (search the file for `PLACEHOLDER`):
 - [ ] Campaign name, description, goal, end date, and donation page link
 - [ ] Dates, times, locations, and RSVP links for upcoming events
 - [ ] Chapter email, Instagram, and LinkedIn group links
+- [ ] Parents section: intro, four stats, safety text, FAQ answers, Parent Liaison name, email, and headshot
+- [ ] Alumni section: three spotlights (name, pledge class, role, quote, photo) and mentor list
+- [ ] Parents' Weekend date, time, location, and RSVP link
+- [ ] Fund descriptions (and per-fund donation links, if any)
+- [ ] `FORM_ENDPOINT` pasted in for the parent newsletter
 - [ ] Approval from Kappa Sigma national or the chapter advisor to use the name and letters
 - [ ] Supabase project created, both migration files run, the two Actions variables added
 - [ ] `main` set as the default branch and GitHub Pages turned on
@@ -227,7 +254,7 @@ Fill these in `content/site.ts` (search the file for `PLACEHOLDER`):
 ```
 app/
   page.tsx               The landing page: puts the sections in order
-  story/ chapter/ events/ give/ reconnect/
+  story/ chapter/ parents/ alumni/ events/ give/ reconnect/
                          One page per top-bar button (page.tsx in each)
   layout.tsx             Fonts, page title, link-preview (SEO) tags
   globals.css            Design tokens (colors, fonts) and shared styles
@@ -235,8 +262,11 @@ app/
   apple-icon.png         iPhone home-screen icon
   opengraph-image.png    Link preview image (+ .alt.txt description)
 components/              One file per page section
-  Header, Hero, StatsBand, OurStory, ChapterToday, Events (+ EventList),
-  Campaign, SignupSection + SignupForm, Footer
+  Header, Hero, StatsBand (+ StatGrid), OurStory, ChapterToday,
+  ParentsSection (+ ParentForm), AlumniSection, Events (+ EventList),
+  Campaign (+ CampaignCard), SignupSection + SignupForm, Footer
+  forms/TextField.tsx    One labelled input, shared by both forms
+  Avatar.tsx             Round headshot or initials
   PageShell.tsx          What every page shares: header, footer, crest, back-to-top
   PhotoFrame.tsx         Shows a photo, or a placeholder box if none yet
   KSMark.tsx             The ΚΣ letters
@@ -244,7 +274,8 @@ components/              One file per page section
 content/site.ts          ALL editable copy and data
 lib/
   signup-validation.ts   Form rules (the database function checks them again)
-  signup-client.ts       Sends a sign-up to Supabase
+  signup-client.ts       Sends an alumni sign-up to Supabase
+  form-endpoint.ts       Sends the parent newsletter form to FORM_ENDPOINT
   dates.ts               Event date helpers (hides past events)
   paths.ts               Makes image paths work under /KSig-Nu-Alpha-Alumni
 public/images/           Chapter photos
@@ -298,4 +329,4 @@ The site is plain files on GitHub Pages, with no server of its own, so the form 
 
 ### Not in v1
 
-User logins, an admin dashboard, online payments, a blog, multiple pages, and email newsletters. These can come later.
+User logins, an admin dashboard, online payments, a blog, and sending email newsletters (the parent form only collects addresses). These can come later.

@@ -26,6 +26,8 @@ export default function Campaign({ standalone = false }: Props) {
           endDate={campaign.endDate}
           donateUrl={campaign.donateUrl}
           donateLabel={campaign.donateLabel}
+          funds={campaign.funds}
+          fundsLegend={campaign.fundsLegend}
         />
       </div>
     </section>
