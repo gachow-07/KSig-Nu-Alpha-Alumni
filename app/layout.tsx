@@ -19,16 +19,14 @@ const body = Source_Sans_3({
   subsets: ["latin"],
 });
 
-function siteUrl() {
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  }
-  return "http://localhost:3000";
+function siteOrigin() {
+  // Just the domain, e.g. "https://gachow-07.github.io". Next.js adds the
+  // base path itself. Set automatically by the GitHub Pages deploy workflow.
+  return process.env.NEXT_PUBLIC_SITE_ORIGIN || "http://localhost:3000";
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl()),
+  metadataBase: new URL(siteOrigin()),
   title: site.seo.title,
   description: site.seo.description,
   openGraph: {

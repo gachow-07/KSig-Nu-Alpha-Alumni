@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState, startTransition } from "react";
-import { submitSignup, type SignupState } from "@/app/actions/signup";
+import { useEffect, useRef, useState } from "react";
 import { signup } from "@/content/site";
+import { submitSignup, type SubmitResult } from "@/lib/signup-client";
 import {
   emptySignup,
   HONEYPOT_FIELD,
@@ -45,21 +45,13 @@ const ROLE_FIELD: FieldConfig = {
   placeholder: "e.g. Project Engineer, Turner Construction",
 };
 
-const initialState: SignupState = { status: "idle" };
-
 export default function SignupForm() {
-  const [state, formAction, pending] = useActionState(submitSignup, initialState);
+  const [state, setState] = useState<SubmitResult | { status: "idle" }>({ status: "idle" });
+  const [pending, setPending] = useState(false);
   const [values, setValues] = useState<SignupValues>(emptySignup);
   const [errors, setErrors] = useState<SignupErrors>({});
   const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLHeadingElement>(null);
-
-  // When the server answers with field errors, show them under the fields.
-  const [lastState, setLastState] = useState(state);
-  if (state !== lastState) {
-    setLastState(state);
-    if (state.status === "invalid") setErrors(state.errors);
-  }
 
   // Move focus to the thank-you message so screen readers announce it.
   useEffect(() => {
@@ -76,19 +68,31 @@ export default function SignupForm() {
     }
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const clientErrors = validateSignup(values);
-    setErrors(clientErrors);
-
-    const firstInvalid = FIELDS.concat(ROLE_FIELD).find((f) => clientErrors[f.name]);
+  function focusFirstError(errs: SignupErrors) {
+    const firstInvalid = FIELDS.concat(ROLE_FIELD).find((f) => errs[f.name]);
     if (firstInvalid) {
       formRef.current?.querySelector<HTMLInputElement>(`[name="${firstInvalid.name}"]`)?.focus();
-      return;
     }
+    return Boolean(firstInvalid);
+  }
 
-    const formData = new FormData(e.currentTarget);
-    startTransition(() => formAction(formData));
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (pending) return;
+
+    const clientErrors = validateSignup(values);
+    setErrors(clientErrors);
+    if (focusFirstError(clientErrors)) return;
+
+    const honeypot = new FormData(e.currentTarget).get(HONEYPOT_FIELD);
+    setPending(true);
+    const result = await submitSignup(values, typeof honeypot === "string" ? honeypot : "");
+    setPending(false);
+    setState(result);
+    if (result.status === "invalid") {
+      setErrors(result.errors);
+      focusFirstError(result.errors);
+    }
   }
 
   if (state.status === "success") {

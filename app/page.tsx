@@ -8,9 +8,6 @@ import OurStory from "@/components/OurStory";
 import SignupSection from "@/components/SignupSection";
 import StatsBand from "@/components/StatsBand";
 
-// Rebuild the page at most once an hour so past events drop off automatically.
-export const revalidate = 3600;
-
 export default function Home() {
   return (
     <>

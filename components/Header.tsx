@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { nav, site } from "@/content/site";
+import { asset } from "@/lib/paths";
 import KSMark from "./KSMark";
 import { CloseIcon, MenuIcon } from "./Icons";
 
@@ -30,7 +31,7 @@ export default function Header() {
       <div className="container-site flex min-h-[72px] items-center justify-between gap-4">
         <a href="#top" className="flex min-h-[44px] items-center gap-3" onClick={close}>
           {site.crestImage && (
-            <Image src={site.crestImage} alt="" width={36} height={36} className="h-9 w-9 object-contain" />
+            <Image src={asset(site.crestImage)} alt="" width={36} height={36} className="h-9 w-9 object-contain" />
           )}
           <KSMark className="h-7 w-auto" />
           <span className="text-base font-bold leading-tight sm:text-lg">{site.name}</span>
