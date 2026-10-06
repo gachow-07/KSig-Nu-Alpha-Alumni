@@ -38,12 +38,12 @@ export default function PhotoFrame({ photo, sizes, className = "", priority, dar
       role="img"
       aria-label={`Photo coming soon: ${photo.alt}`}
       className={`relative flex items-center justify-center overflow-hidden ${
-        dark ? "bg-primary-dark text-on-dark-muted" : "bg-border text-muted"
+        dark ? "bg-emerald-dark text-white/75" : "bg-emerald-tint text-emerald"
       } ${className}`}
     >
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-[0.08]"
+        className="absolute inset-0 opacity-[0.07]"
         style={{
           backgroundImage:
             "repeating-linear-gradient(135deg, currentColor 0 2px, transparent 2px 18px)",
