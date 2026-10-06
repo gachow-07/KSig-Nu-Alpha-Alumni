@@ -3,7 +3,7 @@
 Drop photos in this folder, then point to them from `content/site.ts`
 as `"/images/your-file.jpg"`.
 
-Suggested files and sizes (JPG, under ~1 MB each — the site resizes them for phones automatically):
+Suggested files and sizes (JPG, under ~500 KB each — shrink them first at squoosh.app; the site serves photos exactly as uploaded):
 
 | Photo | Suggested file name | Shape |
 | --- | --- | --- |

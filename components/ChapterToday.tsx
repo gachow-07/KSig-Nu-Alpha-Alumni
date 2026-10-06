@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { chapterToday } from "@/content/site";
+import { asset } from "@/lib/paths";
 import PhotoFrame from "./PhotoFrame";
 
 function initials(name: string) {
@@ -45,7 +46,7 @@ export default function ChapterToday() {
               <li key={officer.title} className="flex items-center gap-4">
                 {officer.headshot ? (
                   <Image
-                    src={officer.headshot}
+                    src={asset(officer.headshot)}
                     alt={`Headshot of ${officer.name}`}
                     width={64}
                     height={64}

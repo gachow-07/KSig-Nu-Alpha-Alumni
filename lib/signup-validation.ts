@@ -1,4 +1,5 @@
-// Shared by the browser (instant feedback) and the server (the real check).
+// Form rules used in the browser for instant feedback. The database function
+// submit_alumni_signup (supabase/migrations) enforces the same rules again.
 
 export type SignupValues = {
   fullName: string;
@@ -64,20 +65,4 @@ export function validateSignup(raw: SignupValues): SignupErrors {
   }
 
   return errors;
-}
-
-/** Reads the form fields out of submitted FormData. */
-export function signupFromFormData(formData: FormData): SignupValues {
-  const text = (name: string) => {
-    const value = formData.get(name);
-    return typeof value === "string" ? value : "";
-  };
-  return {
-    fullName: text("fullName"),
-    pledgeClass: text("pledgeClass"),
-    email: text("email"),
-    city: text("city"),
-    currentRole: text("currentRole"),
-    openToMentoring: formData.get("openToMentoring") === "on",
-  };
 }

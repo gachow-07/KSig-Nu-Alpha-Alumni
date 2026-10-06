@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Photo } from "@/content/site";
+import { asset } from "@/lib/paths";
 import { CameraIcon } from "./Icons";
 
 type Props = {
@@ -21,7 +22,7 @@ export default function PhotoFrame({ photo, sizes, className = "", priority, dar
     return (
       <div className={`relative overflow-hidden ${className}`}>
         <Image
-          src={photo.src}
+          src={asset(photo.src)}
           alt={photo.alt}
           fill
           sizes={sizes}
