@@ -298,3 +298,42 @@
     transform: none !important;
   }
 }
+
+/* ============================================================
+ * NEW: Parents & Families FAQ accordion (<details>/<summary>).
+ * Hides the browser's default triangle and turns the chevron when open.
+ * ============================================================ */
+.faq > summary::-webkit-details-marker {
+  display: none;
+}
+.faq-chevron {
+  transition: rotate var(--motion-hover) var(--motion-ease);
+}
+.faq[open] .faq-chevron {
+  rotate: 180deg;
+}
+
+/* NEW: event filter buttons and the Give fund picker share this pill style. */
+.pill-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  font-weight: 700;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  transition:
+    background-color 150ms,
+    color 150ms,
+    border-color 150ms;
+}
+.pill-toggle:hover {
+  border-color: var(--color-primary);
+}
+.pill-toggle[aria-pressed="true"] {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+}

@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import OurStory from "@/components/OurStory";
+import AlumniSection from "@/components/AlumniSection";
 import PageShell from "@/components/PageShell";
 import { pageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = pageMetadata(
-  "About",
-  "How the Nu Alpha chapter of Kappa Sigma at Cal Poly began and grew, one class at a time.",
+  "Alumni",
+  "Kappa Sigma Nu Alpha alumni: spotlights, the mentor network, and the alumni sign-up.",
 );
 
 export default function Page() {
   return (
     <PageShell>
-      <OurStory standalone />
+      <AlumniSection standalone />
     </PageShell>
   );
 }

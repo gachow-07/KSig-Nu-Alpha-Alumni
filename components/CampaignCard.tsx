@@ -1,5 +1,7 @@
 "use client";
 
+import { useId, useState } from "react";
+import type { Fund } from "@/content/site";
 import { formatDay } from "@/lib/dates";
 import { useCountUp, useIsClient, usePrefersReducedMotion } from "@/lib/motion";
 import { CountSlot } from "./motion/CountUp";
@@ -21,11 +23,13 @@ type Props = {
   endDate: string;
   donateUrl: string;
   donateLabel: string;
+  /** NEW: funds to choose from, shown above the Donate button. */
+  funds?: Fund[];
+  fundsLegend?: string;
 };
 
-export default function CampaignCard({ raised, goal, donors, endDate, donateUrl, donateLabel }: Props) {
+export default function CampaignCard({ raised, goal, donors, endDate, donateUrl, donateLabel, funds = [], fundsLegend }: Props) {
   const percent = goal > 0 ? Math.min(100, Math.round((raised / goal) * 100)) : 0;
-  const isExternal = donateUrl.startsWith("http");
   const isClient = useIsClient();
   const reduced = usePrefersReducedMotion();
   const animate = isClient && !reduced;
@@ -34,7 +38,7 @@ export default function CampaignCard({ raised, goal, donors, endDate, donateUrl,
     <Reveal className="card p-7 text-ink md:p-9">
       {(inView) => (
         <CardBody
-          {...{ raised, goal, donors, endDate, donateUrl, donateLabel, percent, isExternal }}
+          {...{ raised, goal, donors, endDate, donateUrl, donateLabel, percent, funds, fundsLegend }}
           animate={animate}
           active={animate && inView}
         />
@@ -51,10 +55,17 @@ function CardBody({
   donateUrl,
   donateLabel,
   percent,
-  isExternal,
   animate,
   active,
-}: Props & { percent: number; isExternal: boolean; animate: boolean; active: boolean }) {
+  funds = [],
+  fundsLegend,
+}: Props & { percent: number; animate: boolean; active: boolean }) {
+  // NEW: the chosen fund can send the Donate button to its own link.
+  const [fundId, setFundId] = useState(funds[0]?.id ?? "");
+  const groupName = useId();
+  const fund = funds.find((f) => f.id === fundId);
+  const href = fund?.donateUrl || donateUrl;
+  const isExternal = href.startsWith("http");
   // Same trigger and duration for the bar and both numbers, so they stay in sync.
   const amount = useCountUp(raised, active, FILL_MS);
   const pct = useCountUp(percent, active, FILL_MS);
@@ -105,8 +116,39 @@ function CardBody({
         </div>
       </dl>
 
+      {/* NEW: fund picker */}
+      {funds.length > 0 && (
+        <fieldset className="mt-6 border-t border-border pt-6">
+          <legend className="sr-only">{fundsLegend}</legend>
+          <p aria-hidden="true" className="text-xs font-bold uppercase tracking-[0.1em] text-muted">
+            {fundsLegend}
+          </p>
+          <div className="mt-3 grid gap-3">
+            {funds.map((f) => (
+              <label
+                key={f.id}
+                className="flex cursor-pointer items-start gap-3 rounded-md border-2 border-border p-4 transition-colors duration-150 hover:border-primary has-[:checked]:border-primary has-[:checked]:bg-surface-alt"
+              >
+                <input
+                  type="radio"
+                  name={groupName}
+                  value={f.id}
+                  checked={fundId === f.id}
+                  onChange={() => setFundId(f.id)}
+                  className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-primary"
+                />
+                <span>
+                  <span className="block font-bold">{f.label}</span>
+                  <span className="mt-0.5 block text-sm text-muted">{f.description}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
+
       <a
-        href={donateUrl}
+        href={href}
         className="btn btn-primary mt-8 w-full text-lg"
         {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       >

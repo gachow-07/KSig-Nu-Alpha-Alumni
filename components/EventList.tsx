@@ -1,7 +1,7 @@
 "use client";
 
-import { useSyncExternalStore, type CSSProperties } from "react";
-import type { AlumniEvent } from "@/content/site";
+import { useState, useSyncExternalStore, type CSSProperties } from "react";
+import type { AlumniEvent, Audience } from "@/content/site";
 import { formatDay, todayIn } from "@/lib/dates";
 import { ArrowRightIcon, CalendarIcon, PinIcon } from "./Icons";
 import Reveal from "./motion/Reveal";
@@ -14,21 +14,56 @@ type Props = {
   emptyMessage: string;
   /** Heading level for each event title: h3 on the landing page, h2 on the events page. */
   subheading?: "h2" | "h3";
+  /** NEW: filter buttons shown above the list, e.g. ["All", "Alumni", "Families"]. */
+  filters?: readonly string[];
 };
+
+/** NEW: tag colors per audience (existing palette only). */
+const TAG_STYLE: Record<Audience, string> = {
+  Alumni: "bg-primary/10 text-primary",
+  Families: "bg-accent/10 text-accent",
+  Everyone: "bg-surface-alt text-muted",
+};
+
+/** "Everyone" events show under every filter. */
+const matches = (filter: string, audience: Audience) =>
+  filter === "All" || audience === filter || audience === "Everyone";
 
 const noSubscribe = () => () => {};
 
-export default function EventList({ events, buildDay, timeZone, emptyMessage, subheading: SubHeading = "h3" }: Props) {
+export default function EventList({
+  events,
+  buildDay,
+  timeZone,
+  emptyMessage,
+  subheading: SubHeading = "h3",
+  filters = [],
+}: Props) {
   // Static HTML uses the build date; in the browser, switch to the real date.
   const today = useSyncExternalStore(noSubscribe, () => todayIn(timeZone), () => buildDay);
-  const upcoming = events.filter((e) => e.date >= today);
+  const [filter, setFilter] = useState("All");
+  const upcoming = events.filter((e) => e.date >= today && matches(filter, e.audience));
 
   return (
     <>
+      {/* NEW: filter buttons */}
+      {filters.length > 0 && (
+        <div role="group" aria-label="Filter events" className="mt-8 flex flex-wrap gap-3">
+          {filters.map((f) => (
+            <button key={f} type="button" className="pill-toggle" aria-pressed={filter === f} onClick={() => setFilter(f)}>
+              {f}
+            </button>
+          ))}
+        </div>
+      )}
+      <p className="sr-only" aria-live="polite">
+        {`Showing ${upcoming.length} ${upcoming.length === 1 ? "event" : "events"}${filter === "All" ? "" : ` for ${filter.toLowerCase()}`}`}
+      </p>
+
       {upcoming.length === 0 ? (
         <p className="card mt-10 p-8 text-lg text-muted">{emptyMessage}</p>
       ) : (
-        <ul className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ul className={`${filters.length > 0 ? "mt-8" : "mt-12"} grid gap-6 md:grid-cols-2 lg:grid-cols-3`}>
           {upcoming.map((event, i) => (
             <Reveal as="li" key={`${event.date}-${event.title}`} delay={i * 100} className="card flex flex-col p-7 md:p-8">
               <div className="flex items-start gap-4">
@@ -59,7 +94,12 @@ export default function EventList({ events, buildDay, timeZone, emptyMessage, su
                 </div>
               </div>
 
-              <SubHeading className="display mt-6 text-3xl font-extrabold leading-none">{event.title}</SubHeading>
+              {/* NEW: who it's for */}
+              <p className={`mt-6 self-start rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] ${TAG_STYLE[event.audience]}`}>
+                <span className="sr-only">For: </span>
+                {event.audience}
+              </p>
+              <SubHeading className="display mt-3 text-3xl font-extrabold leading-none">{event.title}</SubHeading>
               <p className="mt-3 flex-1 text-muted">{event.description}</p>
 
               {/* Hover: a soft fill sweeps in from the left and the arrow nudges right.

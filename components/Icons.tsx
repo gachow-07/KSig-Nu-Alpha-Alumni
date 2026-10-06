@@ -133,3 +133,11 @@ export function SpinnerIcon({ className = "h-5 w-5" }: IconProps) {
     </svg>
   );
 }
+
+export function ChevronDownIcon(p: IconProps) {
+  return (
+    <Svg {...p}>
+      <path d="M6 9l6 6 6-6" />
+    </Svg>
+  );
+}

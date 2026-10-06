@@ -13,6 +13,7 @@ import {
   type SignupField,
   type SignupValues,
 } from "@/lib/signup-validation";
+import TextField from "./forms/TextField";
 import { CheckCircleIcon, CheckIcon, SpinnerIcon } from "./Icons";
 
 /** How long the check mark shows on the button before the thank-you message appears. */
@@ -52,8 +53,8 @@ const ROLE_FIELD: FieldConfig = {
 export default function SignupForm({
   successHeading: SuccessHeading = "h3",
 }: {
-  /** Heading level for the thank-you message: h3 on the landing page, h2 on the sign-up page. */
-  successHeading?: "h2" | "h3";
+  /** Heading level for the thank-you message (one below the heading above the form). */
+  successHeading?: "h2" | "h3" | "h4";
 }) {
   const [state, setState] = useState<SubmitResult | { status: "idle" }>({ status: "idle" });
   const [pending, setPending] = useState(false);
@@ -122,54 +123,22 @@ export default function SignupForm({
     );
   }
 
-  const renderField = (f: FieldConfig) => {
-    const error = errors[f.name];
-    const errorId = `${f.name}-error`;
-    const hintId = `${f.name}-hint`;
-    const describedBy = [f.hint ? hintId : null, error ? errorId : null].filter(Boolean).join(" ");
-
-    return (
-      <div key={f.name} className="flex flex-col">
-        <label htmlFor={f.name} className="font-bold">
-          {f.label}
-          {f.required ? (
-            <span className="text-accent" aria-hidden="true">
-              {" "}
-              *
-            </span>
-          ) : (
-            <span className="font-normal text-muted"> (optional)</span>
-          )}
-        </label>
-        {f.hint && (
-          <span id={hintId} className="text-sm text-muted">
-            {f.hint}
-          </span>
-        )}
-        <input
-          id={f.name}
-          name={f.name}
-          type={f.type ?? "text"}
-          required={f.required}
-          autoComplete={f.autoComplete}
-          placeholder={f.placeholder}
-          maxLength={MAX_LENGTHS[f.name]}
-          value={values[f.name]}
-          onChange={(e) => update(f.name, e.target.value)}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={describedBy || undefined}
-          className={`mt-2 min-h-[48px] rounded-md border bg-white px-4 py-2 text-ink transition-[border-color,box-shadow] duration-300 ease-out placeholder:text-muted/70 focus:border-primary focus:shadow-[0_0_0_4px_rgba(15,77,58,0.12)] ${
-            error ? "border-accent" : "border-input-border"
-          }`}
-        />
-        {error && (
-          <p id={errorId} className="mt-2 text-sm font-semibold text-accent">
-            {error}
-          </p>
-        )}
-      </div>
-    );
-  };
+  const renderField = (f: FieldConfig) => (
+    <TextField
+      key={f.name}
+      name={f.name}
+      label={f.label}
+      type={f.type}
+      required={f.required}
+      autoComplete={f.autoComplete}
+      hint={f.hint}
+      placeholder={f.placeholder}
+      maxLength={MAX_LENGTHS[f.name]}
+      value={values[f.name]}
+      onChange={(value) => update(f.name, value)}
+      error={errors[f.name]}
+    />
+  );
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate className="card p-7 md:p-10">

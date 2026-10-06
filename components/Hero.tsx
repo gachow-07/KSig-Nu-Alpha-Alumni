@@ -23,13 +23,19 @@ export default function Hero() {
         <p className="animate-enter mt-7 max-w-2xl text-lg text-white/90 md:text-xl" style={enter(2)}>
           {hero.intro}
         </p>
-        <div className="animate-enter mt-9 flex flex-col gap-3 sm:flex-row sm:gap-4" style={enter(3)}>
-          <a href={hero.primaryCta.href} className="btn btn-primary">
-            {hero.primaryCta.label}
-          </a>
-          <a href={hero.secondaryCta.href} className="btn btn-outline">
-            {hero.secondaryCta.label}
-          </a>
+        {/* NEW: three buttons. On phones the first fills its own row and the other two share
+            the second row (each sized to its label), so the hero is exactly as tall as it was
+            with two stacked buttons. */}
+        <div className="animate-enter mt-9 flex flex-wrap gap-x-2 gap-y-3 sm:gap-4" style={enter(3)}>
+          {hero.buttons.map((button, i) => (
+            <a
+              key={button.href}
+              href={button.href}
+              className={`btn sm:flex-initial ${i === 0 ? "btn-primary basis-full sm:basis-auto" : "btn-outline flex-auto px-2 sm:px-6"}`}
+            >
+              {button.label}
+            </a>
+          ))}
         </div>
 
         <PhotoFrame

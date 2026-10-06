@@ -22,7 +22,7 @@ export default function Events({ standalone = false }: Props) {
           {events.heading}
         </Heading>
 
-        <EventList subheading={standalone ? "h2" : "h3"} events={upcoming} buildDay={buildDay} timeZone={site.timeZone} emptyMessage={events.emptyMessage} />
+        <EventList subheading={standalone ? "h2" : "h3"} filters={events.filters} events={upcoming} buildDay={buildDay} timeZone={site.timeZone} emptyMessage={events.emptyMessage} />
       </div>
     </section>
   );
