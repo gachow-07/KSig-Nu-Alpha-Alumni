@@ -2,7 +2,14 @@ import type { CSSProperties } from "react";
 import { story } from "@/content/site";
 import Reveal from "./motion/Reveal";
 
-export default function OurStory() {
+type Props = {
+  /** True when this section is shown on its own page: its title becomes the page's main heading (h1). */
+  standalone?: boolean;
+};
+
+export default function OurStory({ standalone = false }: Props) {
+  const Heading = standalone ? "h1" : "h2";
+  const SubHeading = standalone ? "h2" : "h3";
   const lastIndex = story.timeline.length - 1;
 
   return (
@@ -10,9 +17,9 @@ export default function OurStory() {
       <div className="container-site relative z-10 grid gap-14 lg:grid-cols-2 lg:gap-20">
         <div>
           <p className="eyebrow">{story.eyebrow}</p>
-          <h2 id="story-heading" className="section-heading mt-4">
+          <Heading id="story-heading" className="section-heading mt-4">
             {story.heading}
-          </h2>
+          </Heading>
           <div className="mt-6 space-y-5 text-muted">
             {story.paragraphs.map((p, i) => (
               <p key={i}>{p}</p>
@@ -37,7 +44,7 @@ export default function OurStory() {
                 }`}
               />
               <p className="display text-4xl leading-none text-primary">{entry.year}</p>
-              <h3 className="mt-2 text-lg font-bold">{entry.title}</h3>
+              <SubHeading className="mt-2 text-lg font-bold">{entry.title}</SubHeading>
               <p className="mt-1 text-muted">{entry.detail}</p>
             </li>
           ))}

@@ -4,16 +4,23 @@ import { useEffect, useState } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
 import { ArrowUpIcon } from "./Icons";
 
-/** Round button that fades in once the hero is scrolled past and smooth-scrolls back to the top. */
+/** Round button that fades in once you scroll past the hero (or down a screen on other pages) and smooth-scrolls back to the top. */
 export default function BackToTop() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     const hero = document.getElementById("top");
-    if (!hero) return;
-    const observer = new IntersectionObserver(([entry]) => setShow(!entry.isIntersecting && entry.boundingClientRect.top < 0));
-    observer.observe(hero);
-    return () => observer.disconnect();
+    if (hero) {
+      // Landing page: show once the hero has scrolled out of view.
+      const observer = new IntersectionObserver(([entry]) => setShow(!entry.isIntersecting && entry.boundingClientRect.top < 0));
+      observer.observe(hero);
+      return () => observer.disconnect();
+    }
+    // Other pages (no hero): show after scrolling down about one screen.
+    const onScroll = () => setShow(window.scrollY > window.innerHeight * 0.8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const toTop = () => {

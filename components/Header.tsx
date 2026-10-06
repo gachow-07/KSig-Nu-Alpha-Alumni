@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { nav, site } from "@/content/site";
+import { nav, reconnectLink, site } from "@/content/site";
 import { asset } from "@/lib/paths";
 import KSMark from "./KSMark";
 
@@ -13,7 +15,12 @@ export const HEADER_HEIGHT = 72;
 /** How much the bar shrinks: 72px → 64px (min-h-[72px] → min-h-16). */
 export const COMPACT_DIFF = 8;
 
+/** "/story/" → "/story"; "/" stays "/". */
+const normalize = (path: string | null) => (path && path !== "/" ? path.replace(/\/+$/, "") : "/");
+
 export default function Header() {
+  const pathname = normalize(usePathname());
+  const onLanding = pathname === "/";
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string | null>(null);
@@ -42,9 +49,10 @@ export default function Header() {
     return () => observer.disconnect();
   }, []);
 
-  // Scroll-spy: highlight the nav link for the section crossing the middle of the screen.
+  // Scroll-spy (landing page only): highlight the link for the section crossing the middle of the screen.
   useEffect(() => {
-    const ids = nav.map((item) => item.href.slice(1));
+    if (!onLanding) return;
+    const ids = nav.map((item) => item.section);
     const sections = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
     const visible = new Set<string>();
     const observer = new IntersectionObserver(
@@ -59,7 +67,7 @@ export default function Header() {
     );
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+  }, [onLanding]);
 
   // Close the mobile menu with Escape, or when the screen grows to desktop width.
   useEffect(() => {
@@ -77,6 +85,15 @@ export default function Header() {
 
   const close = () => setOpen(false);
 
+  /**
+   * On a separate page, its link is marked as the current page. On the landing
+   * page, the link for the section you're scrolled to is highlighted instead.
+   */
+  const currentFor = (item: { href: string; section: string }) => {
+    if (!onLanding) return pathname === normalize(item.href) ? ("page" as const) : undefined;
+    return active === item.section ? ("location" as const) : undefined;
+  };
+
   return (
     <header
       // When the bar shrinks by 8px, an 8px bottom margin appears at the same rate,
@@ -93,36 +110,41 @@ export default function Header() {
           scrolled ? "min-h-16" : "min-h-[72px]"
         }`}
       >
-        <a href="#top" className="flex min-h-[44px] items-center gap-3" onClick={close}>
+        <Link href="/" className="flex min-h-[44px] items-center gap-3" onClick={close}>
           {site.crestImage && (
             <Image src={asset(site.crestImage)} alt="" width={36} height={36} className="h-9 w-9 object-contain" />
           )}
           <KSMark className="h-7 w-auto" />
           <span className="text-base font-bold leading-tight sm:text-lg">{site.name}</span>
-        </a>
+        </Link>
 
         <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {nav.map((item) => {
-              const isActive = active === item.href.slice(1);
+              const current = currentFor(item);
+              const isActive = !!current;
               return (
                 <li key={item.href}>
-                  <a
+                  <Link
                     href={item.href}
-                    aria-current={isActive ? "location" : undefined}
+                    aria-current={current}
                     className={`nav-underline inline-flex min-h-[44px] items-center rounded-md px-3 font-semibold transition-colors duration-200 hover:bg-white/10 hover:text-white ${
                       isActive ? "text-white" : "text-white/90"
                     }`}
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               );
             })}
             <li className="ml-3">
-              <a href="#signup" className="btn btn-primary">
-                Reconnect
-              </a>
+              <Link
+                href={reconnectLink.href}
+                aria-current={!onLanding && pathname === normalize(reconnectLink.href) ? "page" : undefined}
+                className="btn btn-primary"
+              >
+                {reconnectLink.label}
+              </Link>
             </li>
           </ul>
         </nav>
@@ -172,24 +194,23 @@ export default function Header() {
               }`}
             >
               {nav.map((item) => {
-                const isActive = active === item.href.slice(1);
                 return (
                   <li key={item.href}>
-                    <a
+                    <Link
                       href={item.href}
                       onClick={close}
-                      aria-current={isActive ? "location" : undefined}
+                      aria-current={currentFor(item)}
                       className="flex min-h-[48px] items-center rounded-md px-3 text-lg font-semibold hover:bg-white/10"
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   </li>
                 );
               })}
               <li className="mt-2">
-                <a href="#signup" onClick={close} className="btn btn-primary w-full">
-                  Reconnect
-                </a>
+                <Link href={reconnectLink.href} onClick={close} className="btn btn-primary w-full">
+                  {reconnectLink.label}
+                </Link>
               </li>
             </ul>
           </nav>

@@ -51,6 +51,20 @@ Rules that keep things from breaking:
 
 If you make a mistake, the build fails and the old version stays live, so you can't break the live site by accident. GitHub emails you, and the **Actions** tab shows a red ✗ with the error. Fix it and commit again.
 
+### Pages
+
+The landing page shows every section in one scroll. Each top-bar button also has its own page with just that section:
+
+| Button | Page | Section file |
+| --- | --- | --- |
+| Our story | `/story/` | `components/OurStory.tsx` |
+| The chapter | `/chapter/` | `components/ChapterToday.tsx` |
+| Events | `/events/` | `components/Events.tsx` |
+| Give | `/give/` | `components/Campaign.tsx` |
+| Reconnect | `/reconnect/` | `components/SignupSection.tsx` |
+
+Both places use the same content from `content/site.ts`, so an edit there updates the landing page and the matching page at once. The top-bar labels and links live in `nav` and `reconnectLink` in `content/site.ts`.
+
 ### Common edits
 
 | I want to... | Edit this in `content/site.ts` |
@@ -213,6 +227,8 @@ Fill these in `content/site.ts` (search the file for `PLACEHOLDER`):
 ```
 app/
   page.tsx               The landing page: puts the sections in order
+  story/ chapter/ events/ give/ reconnect/
+                         One page per top-bar button (page.tsx in each)
   layout.tsx             Fonts, page title, link-preview (SEO) tags
   globals.css            Design tokens (colors, fonts) and shared styles
   icon.svg               Browser tab icon (ΚΣ)
@@ -221,6 +237,7 @@ app/
 components/              One file per page section
   Header, Hero, StatsBand, OurStory, ChapterToday, Events (+ EventList),
   Campaign, SignupSection + SignupForm, Footer
+  PageShell.tsx          What every page shares: header, footer, crest, back-to-top
   PhotoFrame.tsx         Shows a photo, or a placeholder box if none yet
   KSMark.tsx             The ΚΣ letters
   Icons.tsx              Small line icons

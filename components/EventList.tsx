@@ -12,11 +12,13 @@ type Props = {
   buildDay: string;
   timeZone: string;
   emptyMessage: string;
+  /** Heading level for each event title: h3 on the landing page, h2 on the events page. */
+  subheading?: "h2" | "h3";
 };
 
 const noSubscribe = () => () => {};
 
-export default function EventList({ events, buildDay, timeZone, emptyMessage }: Props) {
+export default function EventList({ events, buildDay, timeZone, emptyMessage, subheading: SubHeading = "h3" }: Props) {
   // Static HTML uses the build date; in the browser, switch to the real date.
   const today = useSyncExternalStore(noSubscribe, () => todayIn(timeZone), () => buildDay);
   const upcoming = events.filter((e) => e.date >= today);
@@ -57,7 +59,7 @@ export default function EventList({ events, buildDay, timeZone, emptyMessage }: 
                 </div>
               </div>
 
-              <h3 className="display mt-6 text-3xl font-extrabold leading-none">{event.title}</h3>
+              <SubHeading className="display mt-6 text-3xl font-extrabold leading-none">{event.title}</SubHeading>
               <p className="mt-3 flex-1 text-muted">{event.description}</p>
 
               {/* Hover: a soft fill sweeps in from the left and the arrow nudges right.
