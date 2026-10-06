@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Change a color or font here and it updates everywhere.
+ * Each --color-* token becomes Tailwind classes like bg-primary, text-accent, border-border.
+ */
+@theme {
+  --color-primary: #0f4d3a;
+  --color-primary-dark: #0a3a2c;
+  --color-accent: #b3202e;
+  --color-accent-hover: #961a26;
+  --color-ink: #17201c;
+  --color-muted: #4a5650;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f2f5f3;
+  --color-border: #dce3df;
+  --color-input-border: #b9c4be;
+  --color-footer: #0b241b;
+  --color-on-dark-muted: #cfe3d9;
+
+  --container-site: 1240px;
+}
+
+@theme inline {
+  --font-display: var(--font-big-shoulders), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-source-sans), system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Keeps anchored sections from hiding under the sticky header. */
+    scroll-padding-top: 80px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  .on-dark :focus-visible {
+    outline-color: #ffffff;
+  }
+
+  .on-dark .card :focus-visible {
+    outline-color: var(--color-accent);
+  }
+}
+
+/* ---------- Reusable pieces ---------- */
+
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+@utility section-pad {
+  padding-block: 64px;
+  @media (width >= 48rem) {
+    padding-block: 104px;
+  }
+}
+
+@utility eyebrow {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-accent);
+}
+
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+}
+
+@utility section-heading {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.95;
+  font-size: clamp(2.5rem, 4.5vw, 3.75rem);
+}
+
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  transition:
+    background-color 150ms,
+    color 150ms,
+    border-color 150ms;
+}
+
+@utility btn-primary {
+  background: var(--color-accent);
+  color: #ffffff;
+  &:hover {
+    background: var(--color-accent-hover);
+  }
+}
+
+@utility btn-outline {
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  &:hover {
+    background: #ffffff;
+    color: var(--color-primary);
+  }
+}
+
+@utility card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
