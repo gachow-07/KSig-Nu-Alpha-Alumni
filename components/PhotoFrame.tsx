@@ -11,13 +11,18 @@ type Props = {
   priority?: boolean;
   /** Placeholder styling for dark sections. */
   dark?: boolean;
+  /** Zoom the image slightly when a parent with the `group` class is hovered. */
+  hoverZoom?: boolean;
 };
+
+const ZOOM = "transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.04]";
 
 /**
  * Shows a photo from content/site.ts, or a clearly marked placeholder box
  * when no photo has been added yet. The wrapper must set the size/aspect ratio.
  */
-export default function PhotoFrame({ photo, sizes, className = "", priority, dark }: Props) {
+export default function PhotoFrame({ photo, sizes, className = "", priority, dark, hoverZoom }: Props) {
+  const zoom = hoverZoom ? ZOOM : "";
   if (photo.src) {
     return (
       <div className={`relative overflow-hidden ${className}`}>
@@ -27,7 +32,7 @@ export default function PhotoFrame({ photo, sizes, className = "", priority, dar
           fill
           sizes={sizes}
           priority={priority}
-          className="object-cover"
+          className={`object-cover ${zoom}`}
         />
       </div>
     );
@@ -43,13 +48,13 @@ export default function PhotoFrame({ photo, sizes, className = "", priority, dar
     >
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-[0.08]"
+        className={`absolute inset-0 opacity-[0.08] ${zoom}`}
         style={{
           backgroundImage:
             "repeating-linear-gradient(135deg, currentColor 0 2px, transparent 2px 18px)",
         }}
       />
-      <div className="relative flex flex-col items-center gap-2 px-4 text-center text-sm font-semibold">
+      <div className={`relative flex flex-col items-center gap-2 px-4 text-center text-sm font-semibold ${zoom}`}>
         <CameraIcon className="h-8 w-8" />
         <span>Photo placeholder</span>
       </div>

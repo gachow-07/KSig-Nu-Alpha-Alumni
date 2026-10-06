@@ -27,10 +27,21 @@
 }
 
 @layer base {
+  :root {
+    /* Height of the sticky header bar once scrolled (Header.tsx keeps it in sync). */
+    --header-h: 64px;
+
+    /* Motion timing. Tweak these to speed up or slow down every scroll animation. */
+    --motion-duration: 600ms;
+    --motion-ease: cubic-bezier(0.33, 1, 0.68, 1); /* ease-out (easeOutCubic) */
+    --motion-distance: 20px;
+    --motion-hover: 250ms; /* hover / focus feedback */
+  }
+
   html {
     scroll-behavior: smooth;
-    /* Keeps anchored sections from hiding under the sticky header. */
-    scroll-padding-top: 80px;
+    /* Anchor links stop just below the sticky header. */
+    scroll-padding-top: var(--header-h);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -115,7 +126,15 @@
   transition:
     background-color 150ms,
     color 150ms,
-    border-color 150ms;
+    border-color 150ms,
+    translate var(--motion-hover) var(--motion-ease),
+    box-shadow var(--motion-hover) var(--motion-ease);
+  /* Lift slightly on hover. */
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover:not(:disabled) {
+      translate: 0 -2px;
+    }
+  }
 }
 
 @utility btn-primary {
@@ -139,4 +158,143 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 12px;
+}
+
+/* Nav link underline that slides in from the left (and stays for the active section). */
+@utility nav-underline {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 8px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--motion-hover) var(--motion-ease);
+  }
+  &:hover::after,
+  &[aria-current]::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ============================================================
+ * MOTION
+ * Everything that moves lives below. All of it is switched off when the
+ * visitor's device asks for reduced motion.
+ *
+ * - Hero text uses .animate-enter (plays on page load, pure CSS).
+ * - <Reveal> (components/motion/Reveal.tsx) adds data-reveal / data-shown.
+ *   Children can key off a revealed parent with data-anim="fade-up | pop".
+ *   Per-item delays come from the --reveal-delay and --delay CSS variables.
+ * - Hidden "before" states only apply when JavaScript is running (html.js),
+ *   so the page never stays blank if scripts fail to load.
+ * ============================================================ */
+
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--motion-distance), 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-enter {
+    animation: enter-up var(--motion-duration) var(--motion-ease) both;
+    animation-delay: var(--enter-delay, 0ms);
+  }
+
+  /* Elements wrapped in <Reveal>. */
+  .js [data-reveal] {
+    transition:
+      opacity var(--motion-duration) var(--motion-ease),
+      transform var(--motion-duration) var(--motion-ease);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .js [data-reveal="up"]:not([data-shown]) {
+    opacity: 0;
+    transform: translate3d(0, var(--motion-distance), 0);
+  }
+  .js [data-reveal="left"]:not([data-shown]) {
+    opacity: 0;
+    transform: translate3d(var(--motion-distance), 0, 0);
+  }
+  .js [data-reveal="right"]:not([data-shown]) {
+    opacity: 0;
+    transform: translate3d(calc(-1 * var(--motion-distance)), 0, 0);
+  }
+  .js [data-reveal="pop"]:not([data-shown]) {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  .js [data-reveal="fade"]:not([data-shown]) {
+    opacity: 0;
+  }
+
+  /* Children that animate once their <Reveal> parent is shown. */
+  .js [data-anim] {
+    --anim-delay: calc(var(--reveal-delay, 0ms) + var(--delay, 0ms));
+    /* box-shadow keeps hover rings smooth (no entrance delay). */
+    transition:
+      opacity var(--motion-duration) var(--motion-ease) var(--anim-delay),
+      transform var(--motion-duration) var(--motion-ease) var(--anim-delay),
+      box-shadow var(--motion-hover) var(--motion-ease) 0ms;
+  }
+  .js [data-reveal]:not([data-shown]) [data-anim="fade-up"] {
+    opacity: 0;
+    transform: translate3d(0, var(--motion-distance), 0);
+  }
+  .js [data-reveal]:not([data-shown]) [data-anim="pop"] {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  /* Timeline line in Our Story draws downward. */
+  .js .timeline-line::before {
+    transform-origin: top;
+    transition: transform 700ms var(--motion-ease) var(--reveal-delay, 0ms);
+  }
+  .js .timeline-line[data-reveal]:not([data-shown])::before {
+    transform: scaleY(0);
+  }
+}
+
+/* The timeline's vertical line (always drawn; animated above). */
+.timeline-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  width: 2px;
+  background: var(--color-border);
+}
+
+/* Reduced motion: no movement anywhere, content appears immediately. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  [data-reveal],
+  [data-anim] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

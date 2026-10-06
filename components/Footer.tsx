@@ -1,5 +1,6 @@
 import { footer, site } from "@/content/site";
 import KSMark from "./KSMark";
+import Reveal from "./motion/Reveal";
 import { InstagramIcon, LinkedInIcon, MailIcon } from "./Icons";
 
 export default function Footer() {
@@ -8,7 +9,7 @@ export default function Footer() {
 
   return (
     <footer className="on-dark bg-footer text-white">
-      <div className="container-site flex flex-col gap-10 py-14 md:flex-row md:items-start md:justify-between">
+      <Reveal direction="fade" className="container-site flex flex-col gap-10 py-14 md:flex-row md:items-start md:justify-between">
         <div>
           <KSMark className="h-10 w-auto text-white" />
           <p className="mt-5 text-lg font-bold">{footer.chapterName}</p>
@@ -32,7 +33,7 @@ export default function Footer() {
             </a>
           </li>
         </ul>
-      </div>
+      </Reveal>
       <div className="border-t border-white/10">
         <p className="container-site py-6 text-sm text-on-dark-muted">
           © {new Date().getFullYear()} {site.name}. Not an official publication of Kappa Sigma

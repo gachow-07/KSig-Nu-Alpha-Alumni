@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { signup } from "@/content/site";
+import { prefersReducedMotion } from "@/lib/motion";
 import { submitSignup, type SubmitResult } from "@/lib/signup-client";
 import {
   emptySignup,
@@ -12,7 +13,10 @@ import {
   type SignupField,
   type SignupValues,
 } from "@/lib/signup-validation";
-import { CheckCircleIcon } from "./Icons";
+import { CheckCircleIcon, CheckIcon, SpinnerIcon } from "./Icons";
+
+/** How long the check mark shows on the button before the thank-you message appears. */
+const SUCCESS_PAUSE_MS = 600;
 
 type FieldConfig = {
   name: SignupField;
@@ -48,6 +52,7 @@ const ROLE_FIELD: FieldConfig = {
 export default function SignupForm() {
   const [state, setState] = useState<SubmitResult | { status: "idle" }>({ status: "idle" });
   const [pending, setPending] = useState(false);
+  const [succeeded, setSucceeded] = useState(false);
   const [values, setValues] = useState<SignupValues>(emptySignup);
   const [errors, setErrors] = useState<SignupErrors>({});
   const formRef = useRef<HTMLFormElement>(null);
@@ -78,7 +83,7 @@ export default function SignupForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (pending) return;
+    if (pending || succeeded) return;
 
     const clientErrors = validateSignup(values);
     setErrors(clientErrors);
@@ -88,6 +93,11 @@ export default function SignupForm() {
     setPending(true);
     const result = await submitSignup(values, typeof honeypot === "string" ? honeypot : "");
     setPending(false);
+    // Show a check mark on the button for a moment before swapping in the thank-you.
+    if (result.status === "success" && !prefersReducedMotion()) {
+      setSucceeded(true);
+      await new Promise((resolve) => setTimeout(resolve, SUCCESS_PAUSE_MS));
+    }
     setState(result);
     if (result.status === "invalid") {
       setErrors(result.errors);
@@ -97,7 +107,7 @@ export default function SignupForm() {
 
   if (state.status === "success") {
     return (
-      <div className="card flex flex-col items-start gap-4 p-8 md:p-10" role="status">
+      <div className="card animate-enter flex flex-col items-start gap-4 p-8 md:p-10" role="status">
         <CheckCircleIcon className="h-12 w-12 text-primary" />
         <h3 ref={successRef} tabIndex={-1} className="section-heading text-primary outline-none">
           {signup.successHeading}
@@ -143,7 +153,7 @@ export default function SignupForm() {
           onChange={(e) => update(f.name, e.target.value)}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy || undefined}
-          className={`mt-2 min-h-[48px] rounded-md border bg-white px-4 py-2 text-ink placeholder:text-muted/70 focus:border-primary ${
+          className={`mt-2 min-h-[48px] rounded-md border bg-white px-4 py-2 text-ink transition-[border-color,box-shadow] duration-300 ease-out placeholder:text-muted/70 focus:border-primary focus:shadow-[0_0_0_4px_rgba(15,77,58,0.12)] ${
             error ? "border-accent" : "border-input-border"
           }`}
         />
@@ -192,7 +202,14 @@ export default function SignupForm() {
         </p>
       )}
 
-      <button type="submit" disabled={pending} className="btn btn-primary mt-8 w-full text-lg disabled:opacity-70 sm:w-auto">
+      <button
+        type="submit"
+        disabled={pending || succeeded}
+        aria-busy={pending || undefined}
+        className={`btn btn-primary mt-8 w-full text-lg sm:w-auto ${pending ? "disabled:opacity-70" : ""}`}
+      >
+        {pending && <SpinnerIcon className="h-5 w-5" />}
+        {succeeded && <CheckIcon className="animate-enter h-5 w-5" />}
         {pending ? "Sending…" : "Add me to the alumni list"}
       </button>
     </form>
