@@ -4,7 +4,7 @@ import SignupForm from "./SignupForm";
 export default function SignupSection() {
   return (
     <section id="signup" aria-labelledby="signup-heading" className="section-pad bg-surface">
-      <div className="container-site grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
+      <div className="container-site relative z-10 grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
         <div>
           <p className="eyebrow">{signup.eyebrow}</p>
           <h2 id="signup-heading" className="section-heading mt-4">

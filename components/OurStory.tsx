@@ -7,7 +7,7 @@ export default function OurStory() {
 
   return (
     <section id="story" aria-labelledby="story-heading" className="section-pad bg-surface">
-      <div className="container-site grid gap-14 lg:grid-cols-2 lg:gap-20">
+      <div className="container-site relative z-10 grid gap-14 lg:grid-cols-2 lg:gap-20">
         <div>
           <p className="eyebrow">{story.eyebrow}</p>
           <h2 id="story-heading" className="section-heading mt-4">

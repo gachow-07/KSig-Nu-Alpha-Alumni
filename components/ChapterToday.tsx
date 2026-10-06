@@ -19,7 +19,7 @@ const AVATAR_RING =
 export default function ChapterToday() {
   return (
     <section id="today" aria-labelledby="today-heading" className="section-pad bg-surface-alt">
-      <div className="container-site">
+      <div className="container-site relative z-10">
         <div className="max-w-2xl">
           <p className="eyebrow">{chapterToday.eyebrow}</p>
           <h2 id="today-heading" className="section-heading mt-4">

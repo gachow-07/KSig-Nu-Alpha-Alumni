@@ -10,7 +10,7 @@ export default function Events() {
 
   return (
     <section id="events" aria-labelledby="events-heading" className="section-pad bg-surface">
-      <div className="container-site">
+      <div className="container-site relative z-10">
         <p className="eyebrow">{events.eyebrow}</p>
         <h2 id="events-heading" className="section-heading mt-4">
           {events.heading}
