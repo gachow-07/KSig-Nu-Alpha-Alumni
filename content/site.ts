@@ -34,6 +34,14 @@ export type ChapterCard = { title: string; description: string; photo: Photo };
 
 export type Officer = { title: string; name: string; headshot?: string };
 
+export type InvolvementItem = {
+  /** Which icon to show: "mentor", "calendar" or "heart". */
+  icon: "mentor" | "calendar" | "heart";
+  title: string;
+  description: string;
+  link: { label: string; href: string };
+};
+
 export type AlumniEvent = {
   /** Date in YYYY-MM-DD format. The event disappears automatically the day after this date. */
   date: string;
@@ -57,8 +65,10 @@ export const site = {
   /** Time zone used to decide when an event is "past". */
   timeZone: "America/Los_Angeles",
   /**
-   * Optional: an approved crest image from Kappa Sigma national, e.g. "/images/crest.png".
-   * Leave undefined to show only the ΚΣ letters. Do NOT draw or recreate the crest.
+   * Optional: an approved crest image from Kappa Sigma national, e.g. "/images/crest.png"
+   * (a PNG or SVG with a transparent background works best). It appears in the header
+   * and as a large, faded backdrop behind the top of the page. Leave undefined to use
+   * the ΚΣ letters instead. Do NOT draw or recreate the crest.
    */
   crestImage: undefined as string | undefined,
   seo: {
@@ -78,20 +88,21 @@ export const nav = [
 // ---------- Hero ----------
 
 export const hero = {
-  eyebrow: `${site.school} · Chartered ${site.charterYear}`,
-  headlineLine1: "Kappa Sigma",
-  headlineLine2: "Nu Alpha",
+  eyebrow: `${site.school} · Est. ${site.charterYear}`,
+  // The headline reads as one sentence; the second part is shown in scarlet.
+  headline: "Reconnect with",
+  headlineAccent: "Nu Alpha.",
   intro:
     "Wherever you landed after Cal Poly, you're still a brother of Nu Alpha. Add your name to the alumni list so we can keep you in the loop on events, mentoring, and the chapter's next chapter.",
   primaryCta: { label: "Join the alumni list", href: "#signup" },
   secondaryCta: { label: "See the chapter today", href: "#today" },
   photo: {
-    src: undefined, // PLACEHOLDER: wide group photo in front of the house, e.g. "/images/hero-group.jpg"
+    src: undefined, // PLACEHOLDER: group photo in front of the house, e.g. "/images/hero-group.jpg"
     alt: "Nu Alpha brothers gathered in front of the chapter house",
   } as Photo,
 };
 
-// ---------- Stats band ----------
+// ---------- Stats (shown in a row under the hero) ----------
 
 export const stats: Stat[] = [
   { value: site.charterYear, label: "Chartered at Cal Poly" }, // PLACEHOLDER (set charterYear above)
@@ -160,6 +171,34 @@ export const chapterToday = {
   ] as Officer[],
 };
 
+// ---------- Get involved ----------
+
+export const involvement = {
+  eyebrow: "Get involved",
+  heading: "Three ways to stay part of it",
+  items: [
+    {
+      icon: "mentor",
+      title: "Mentor a brother",
+      description:
+        "Actives want advice on internships, careers, and life after SLO. An hour of your time goes a long way.",
+      link: { label: "Sign up to mentor", href: "#signup" },
+    },
+    {
+      icon: "calendar",
+      title: "Come back for events",
+      description: "Homecoming, regional mixers, and the annual golf tournament. Bring your pledge class.",
+      link: { label: "See upcoming events", href: "#events" },
+    },
+    {
+      icon: "heart",
+      title: "Give back",
+      description: "Help build the chapter the next generation of Nu Alpha brothers will call home.",
+      link: { label: "View the campaign", href: "#give" },
+    },
+  ] as InvolvementItem[],
+};
+
 // ---------- Events ----------
 // Past events hide automatically. Order doesn't matter; they're sorted soonest first.
 
@@ -218,6 +257,11 @@ export const signup = {
   heading: "Tell us where you landed",
   intro:
     "Two minutes, six fields. We'll only use this to keep you posted on Nu Alpha alumni news and events.",
+  benefits: [
+    "Invites to alumni events near you",
+    "Chapter news a few times a year, never spam",
+    "The option to mentor current brothers",
+  ],
   successHeading: "You're on the list.",
   successMessage:
     "Thanks for reconnecting. Keep an eye on your inbox for alumni news and event invites.",

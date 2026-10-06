@@ -9,13 +9,12 @@ export default function Events() {
   const upcoming = upcomingEvents(events.list, site.timeZone);
 
   return (
-    <section id="events" aria-labelledby="events-heading" className="section-pad bg-surface">
-      <div className="container-site">
+    <section id="events" aria-labelledby="events-heading" className="section-pad bg-surface-alt">
+      <div className="container-site max-w-[960px]">
         <p className="eyebrow">{events.eyebrow}</p>
         <h2 id="events-heading" className="section-heading mt-4">
           {events.heading}
         </h2>
-
         <EventList events={upcoming} buildDay={buildDay} timeZone={site.timeZone} emptyMessage={events.emptyMessage} />
       </div>
     </section>
