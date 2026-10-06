@@ -57,8 +57,19 @@ export const site = {
   /** Time zone used to decide when an event is "past". */
   timeZone: "America/Los_Angeles",
   /**
-   * Crest in the header. Leave undefined: HQ approved the crest for the hero
-   * only (see hero.crest below). Do NOT draw or recreate the crest.
+   * The official Kappa Sigma crest (approved by HQ), shown faded behind the
+   * whole page. It scrolls more slowly than the page, so the bottom of the
+   * crest lines up with the bottom of the page. Upload the approved file to
+   * public/images/ with this exact name; if the file isn't there, nothing shows.
+   */
+  crest: {
+    src: "/images/crest.png",
+    /** How visible it is: 0 = invisible, 1 = full strength. */
+    opacity: 0.07,
+  },
+  /**
+   * Crest in the header (small, next to the ΚΣ letters). Leave undefined to
+   * keep the header as-is. Do NOT draw or recreate the crest.
    */
   crestImage: undefined as string | undefined,
   seo: {
@@ -85,17 +96,6 @@ export const hero = {
     "Wherever you landed after Cal Poly, you're still a brother of Nu Alpha. Add your name to the alumni list so we can keep you in the loop on events, mentoring, and the chapter's next chapter.",
   primaryCta: { label: "Join the alumni list", href: "#signup" },
   secondaryCta: { label: "See the chapter today", href: "#today" },
-  /**
-   * The official Kappa Sigma crest, shown faded in the background next to the
-   * headline. HQ approved it for the hero only, so don't reuse it elsewhere.
-   * Upload the approved file to public/images/ with this exact name.
-   * If the file isn't there, nothing is shown.
-   */
-  crest: {
-    src: "/images/crest.png",
-    /** How visible it is: 0 = invisible, 1 = full strength. */
-    opacity: 0.18,
-  },
   photo: {
     src: undefined, // PLACEHOLDER: wide group photo in front of the house, e.g. "/images/hero-group.jpg"
     alt: "Nu Alpha brothers gathered in front of the chapter house",
