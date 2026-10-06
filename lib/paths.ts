@@ -1,4 +1,4 @@
-/** "/KSig-Nu-Alpha-Alumni" on GitHub Pages, "" locally or on a custom domain. */
+/** "/KSig-Nu-Alpha-OutReach" on GitHub Pages, "" locally or on a custom domain. */
 export const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 /** Turns "/images/photo.jpg" into a path that works wherever the site is hosted. */

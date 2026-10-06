@@ -80,8 +80,8 @@ export type Fund = {
 // ---------- Site-wide ----------
 
 export const site = {
-  name: "Kappa Sigma Nu Alpha Alumni",
-  shortName: "Nu Alpha Alumni",
+  name: "KSig Outreach",
+  shortName: "KSig Outreach",
   school: "Cal Poly San Luis Obispo",
   /** Used for "Chartered [YEAR]" in the hero and the stats band. */
   charterYear: "[YEAR]", // PLACEHOLDER
@@ -104,7 +104,7 @@ export const site = {
    */
   crestImage: undefined as string | undefined,
   seo: {
-    title: "Kappa Sigma Nu Alpha Alumni | Cal Poly",
+    title: "KSig Outreach | Kappa Sigma Nu Alpha at Cal Poly",
     description:
       "The Nu Alpha chapter of Kappa Sigma at Cal Poly San Luis Obispo, for brothers, alumni and families. See the chapter today, find events, and stay connected.",
   },
@@ -376,7 +376,7 @@ export const signup = {
 
 export const footer = {
   chapterName: "Nu Alpha Chapter of Kappa Sigma",
-  email: "alumni@ksignualpha.com", // PLACEHOLDER
+  email: "outreach@ksignualpha.com", // PLACEHOLDER
   instagramUrl: "https://instagram.com/", // PLACEHOLDER
   instagramHandle: "@[handle]", // PLACEHOLDER
   linkedinUrl: "https://www.linkedin.com/groups/", // PLACEHOLDER
