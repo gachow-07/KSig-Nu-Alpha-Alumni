@@ -1,4 +1,4 @@
-# Kappa Sigma Nu Alpha Alumni
+# KSig Outreach
 
 The outreach website for the Nu Alpha chapter of Kappa Sigma at Cal Poly San Luis Obispo, for alumni **and** parents & families.
 
@@ -9,7 +9,7 @@ It does four things:
 3. **Drives donations and event attendance**: a campaign section (with a fund picker) links to an outside donation page, and an events list shows upcoming events with RSVP links, filterable by Alumni / Families.
 4. **Welcomes parents & families**: chapter stats, safety & accountability, an FAQ, a parent liaison contact, and a parent newsletter sign-up.
 
-**Live site:** https://gachow-07.github.io/KSig-Nu-Alpha-Alumni/
+**Live site:** https://gachow-07.github.io/KSig-Outreach/
 
 **Built with:** Next.js + TypeScript, Tailwind CSS, Supabase (database), GitHub Pages (hosting). All free at chapter scale.
 
@@ -141,8 +141,8 @@ Only needed to run the site on your computer. Editing on github.com needs nothin
 ### 2. Run the site on your computer
 
 ```bash
-git clone https://github.com/gachow-07/KSig-Nu-Alpha-Alumni.git
-cd KSig-Nu-Alpha-Alumni
+git clone https://github.com/gachow-07/KSig-Outreach.git
+cd KSig-Outreach
 npm install
 npm run dev
 ```
@@ -163,7 +163,7 @@ Other commands:
 
 1. Go to [supabase.com](https://supabase.com) and sign up. Use a chapter email (e.g. the alumni relations account), not a personal one, so access survives graduation.
 2. Click **New project**.
-   - **Name:** `ksig-nu-alpha-alumni`
+   - **Name:** `ksig-outreach`
    - **Database password:** click Generate, then save it in the chapter password manager. You probably won't need it again.
    - **Region:** West US (closest to SLO).
    - Plan: **Free**.
@@ -196,7 +196,7 @@ The repo has a workflow ([`.github/workflows/deploy.yml`](.github/workflows/depl
    | `SUPABASE_URL` | your Project URL |
    | `SUPABASE_PUBLISHABLE_KEY` | your publishable key |
 
-4. **Publish:** **Actions** tab → **Deploy to GitHub Pages** → **Run workflow** → **Run workflow**. In about 2 minutes the site is live at **https://gachow-07.github.io/KSig-Nu-Alpha-Alumni/**.
+4. **Publish:** **Actions** tab → **Deploy to GitHub Pages** → **Run workflow** → **Run workflow**. In about 2 minutes the site is live at **https://gachow-07.github.io/KSig-Outreach/**.
 5. **Test it:** open the link on your phone, submit the form with your own info, and check **Table Editor → alumni** in Supabase. Your row should be there. 🎉 Delete the test row when you're done.
 
 You can do steps 1, 2 and 4 before Supabase is ready. The page will look right, but the form won't save until step 3 is done and the workflow runs again.
@@ -277,7 +277,7 @@ lib/
   signup-client.ts       Sends an alumni sign-up to Supabase
   form-endpoint.ts       Sends the parent newsletter form to FORM_ENDPOINT
   dates.ts               Event date helpers (hides past events)
-  paths.ts               Makes image paths work under /KSig-Nu-Alpha-Alumni
+  paths.ts               Makes image paths work under /KSig-Outreach
 public/images/           Chapter photos
 supabase/migrations/     SQL that creates the alumni table and sign-up function
 .github/workflows/       Builds and publishes the site to GitHub Pages

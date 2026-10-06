@@ -29,7 +29,7 @@ export default function Footer() {
           </li>
           <li>
             <a href={footer.linkedinUrl} className={linkClass} target="_blank" rel="noopener noreferrer">
-              <LinkedInIcon /> LinkedIn alumni group
+              <LinkedInIcon /> LinkedIn group
             </a>
           </li>
         </ul>

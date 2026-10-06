@@ -5,7 +5,7 @@ import { pageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = pageMetadata(
   "Alumni events",
-  "Upcoming Kappa Sigma Nu Alpha alumni events, with dates, locations and RSVP links.",
+  "Upcoming Kappa Sigma Nu Alpha events for alumni and families, with dates, locations and RSVP links.",
 );
 
 export default function Page() {

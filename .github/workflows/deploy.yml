@@ -48,7 +48,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # "/KSig-Nu-Alpha-Alumni" on github.io, empty on a custom domain.
+          # "/KSig-Outreach" on github.io, empty on a custom domain.
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
           NEXT_PUBLIC_SITE_ORIGIN: ${{ steps.pages.outputs.origin }}
           # Set these under Settings → Secrets and variables → Actions → Variables.
