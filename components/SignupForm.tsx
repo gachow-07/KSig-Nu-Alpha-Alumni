@@ -97,11 +97,9 @@ export default function SignupForm() {
 
   if (state.status === "success") {
     return (
-      <div className="card soft-shadow flex flex-col items-start gap-4 p-8 md:p-10" role="status">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-tint text-emerald">
-          <CheckCircleIcon className="h-8 w-8" />
-        </span>
-        <h3 ref={successRef} tabIndex={-1} className="section-heading outline-none">
+      <div className="card flex flex-col items-start gap-4 p-8 md:p-10" role="status">
+        <CheckCircleIcon className="h-12 w-12 text-primary" />
+        <h3 ref={successRef} tabIndex={-1} className="section-heading text-primary outline-none">
           {signup.successHeading}
         </h3>
         <p className="max-w-xl text-lg text-muted">{signup.successMessage}</p>
@@ -117,10 +115,10 @@ export default function SignupForm() {
 
     return (
       <div key={f.name} className="flex flex-col">
-        <label htmlFor={f.name} className="text-[15px] font-semibold text-ink">
+        <label htmlFor={f.name} className="font-bold">
           {f.label}
           {f.required ? (
-            <span className="text-scarlet" aria-hidden="true">
+            <span className="text-accent" aria-hidden="true">
               {" "}
               *
             </span>
@@ -145,12 +143,12 @@ export default function SignupForm() {
           onChange={(e) => update(f.name, e.target.value)}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy || undefined}
-          className={`mt-2 min-h-[50px] rounded-xl border bg-white px-4 py-2 text-ink transition-shadow placeholder:text-muted/70 focus:border-emerald focus:shadow-[0_0_0_4px_rgba(33,87,50,0.12)] ${
-            error ? "border-scarlet" : "border-input-line"
+          className={`mt-2 min-h-[48px] rounded-md border bg-white px-4 py-2 text-ink placeholder:text-muted/70 focus:border-primary ${
+            error ? "border-accent" : "border-input-border"
           }`}
         />
         {error && (
-          <p id={errorId} className="mt-2 text-sm font-semibold text-scarlet">
+          <p id={errorId} className="mt-2 text-sm font-semibold text-accent">
             {error}
           </p>
         )}
@@ -159,9 +157,9 @@ export default function SignupForm() {
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} noValidate className="card soft-shadow p-6 sm:p-8 md:p-10">
+    <form ref={formRef} onSubmit={handleSubmit} noValidate className="card p-7 md:p-10">
       <p className="mb-6 text-sm text-muted">
-        Fields marked <span className="text-scarlet">*</span> are required.
+        Fields marked <span className="text-accent">*</span> are required.
       </p>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -170,15 +168,15 @@ export default function SignupForm() {
       </div>
 
       <div className="mt-6">
-        <label className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-xl border border-line bg-surface-alt px-4 py-3">
+        <label className="inline-flex min-h-[44px] cursor-pointer items-center gap-3">
           <input
             type="checkbox"
             name="openToMentoring"
             checked={values.openToMentoring}
             onChange={(e) => update("openToMentoring", e.target.checked)}
-            className="h-5 w-5 shrink-0 cursor-pointer accent-emerald"
+            className="h-6 w-6 shrink-0 cursor-pointer accent-primary"
           />
-          <span className="font-medium text-ink">I&apos;m open to mentoring current brothers</span>
+          <span className="font-semibold">I&apos;m open to mentoring current brothers</span>
         </label>
       </div>
 
@@ -189,7 +187,7 @@ export default function SignupForm() {
       </div>
 
       {state.status === "error" && !pending && (
-        <p role="alert" className="mt-6 rounded-xl border border-scarlet/30 bg-scarlet-tint px-4 py-3 font-semibold text-scarlet">
+        <p role="alert" className="mt-6 rounded-md border border-accent bg-accent/5 px-4 py-3 font-semibold text-accent">
           {state.message}
         </p>
       )}
