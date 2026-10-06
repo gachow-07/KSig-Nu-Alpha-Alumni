@@ -2,40 +2,35 @@
 
 /*
  * Design tokens. Change a color or font here and it updates everywhere.
- * Each --color-* token becomes Tailwind classes like bg-emerald, text-scarlet, border-line.
- *
- * Kappa Sigma brand colors: Scarlet (PMS 193), Emerald (PMS 357), White, with Gold (PMS 117)
- * as an accent. Gold is too light for text on white, so it's only used for small details.
+ * Each --color-* token becomes Tailwind classes like bg-primary, text-accent, border-border.
  */
 @theme {
-  --color-scarlet: #bf0d3e;
-  --color-scarlet-dark: #990a32;
-  --color-scarlet-tint: #fbeef1;
-  --color-emerald: #215732;
-  --color-emerald-dark: #163b22;
-  --color-emerald-tint: #f1f6f2;
-  --color-gold: #c99700;
-  --color-gold-tint: #fbf4dc;
-  --color-ink: #15201a;
-  --color-muted: #56625b;
+  --color-primary: #0f4d3a;
+  --color-primary-dark: #0a3a2c;
+  --color-accent: #b3202e;
+  --color-accent-hover: #961a26;
+  --color-ink: #17201c;
+  --color-muted: #4a5650;
   --color-surface: #ffffff;
-  --color-surface-alt: #f7f8f6;
-  --color-line: #e3e8e4;
-  --color-input-line: #c5cec8;
+  --color-surface-alt: #f2f5f3;
+  --color-border: #dce3df;
+  --color-input-border: #b9c4be;
+  --color-footer: #0b241b;
+  --color-on-dark-muted: #cfe3d9;
 
-  --container-site: 1200px;
+  --container-site: 1240px;
 }
 
 @theme inline {
-  --font-heading: var(--font-jakarta), system-ui, sans-serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-big-shoulders), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-source-sans), system-ui, sans-serif;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
     /* Keeps anchored sections from hiding under the sticky header. */
-    scroll-padding-top: 88px;
+    scroll-padding-top: 80px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -49,12 +44,12 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-size: 17px;
-    line-height: 1.6;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
 
   :focus-visible {
-    outline: 3px solid var(--color-scarlet);
+    outline: 3px solid var(--color-accent);
     outline-offset: 3px;
   }
 
@@ -63,7 +58,7 @@
   }
 
   .on-dark .card :focus-visible {
-    outline-color: var(--color-scarlet);
+    outline-color: var(--color-accent);
   }
 }
 
@@ -73,52 +68,37 @@
   width: 100%;
   max-width: var(--container-site);
   margin-inline: auto;
-  padding-inline: 20px;
-  @media (width >= 48rem) {
-    padding-inline: 32px;
-  }
+  padding-inline: 24px;
 }
 
 @utility section-pad {
-  padding-block: 72px;
+  padding-block: 64px;
   @media (width >= 48rem) {
-    padding-block: 112px;
+    padding-block: 104px;
   }
 }
 
-/* Small label above a heading: gold dot + uppercase text. */
 @utility eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--color-emerald);
-  &::before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    border-radius: 9999px;
-    background: var(--color-gold);
-  }
+  color: var(--color-accent);
 }
 
-@utility heading {
-  font-family: var(--font-heading);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.08;
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
 }
 
 @utility section-heading {
-  font-family: var(--font-heading);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-  color: var(--color-emerald);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.95;
+  font-size: clamp(2.5rem, 4.5vw, 3.75rem);
 }
 
 @utility btn {
@@ -128,43 +108,35 @@
   gap: 0.5rem;
   min-height: 48px;
   padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: 600;
+  border-radius: 6px;
+  font-weight: 700;
   line-height: 1.2;
   text-align: center;
   transition:
     background-color 150ms,
     color 150ms,
-    border-color 150ms,
-    box-shadow 150ms;
+    border-color 150ms;
 }
 
 @utility btn-primary {
-  background: var(--color-scarlet);
+  background: var(--color-accent);
   color: #ffffff;
-  box-shadow: 0 6px 16px -6px rgb(191 13 62 / 0.55);
   &:hover {
-    background: var(--color-scarlet-dark);
+    background: var(--color-accent-hover);
   }
 }
 
-@utility btn-secondary {
-  background: #ffffff;
-  color: var(--color-emerald);
-  border: 1.5px solid var(--color-line);
+@utility btn-outline {
+  border: 2px solid #ffffff;
+  color: #ffffff;
   &:hover {
-    border-color: var(--color-emerald);
+    background: #ffffff;
+    color: var(--color-primary);
   }
 }
 
 @utility card {
   background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: 20px;
-}
-
-@utility soft-shadow {
-  box-shadow:
-    0 1px 2px rgb(21 32 26 / 0.04),
-    0 12px 32px -12px rgb(21 32 26 / 0.12);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
 }

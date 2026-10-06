@@ -64,9 +64,6 @@ If you make a mistake, the build fails and the old version stays live, so you ca
 | Update donation progress | `campaign.raised`, `campaign.donors` |
 | Change the donation link | `campaign.donateUrl` |
 | Change the email / Instagram / LinkedIn | `footer` |
-| Change the big headline at the top | `hero.headline` and `hero.headlineAccent` (shown in scarlet) |
-| Edit the "Get involved" cards | `involvement` |
-| Edit the bullet points next to the sign-up form | `signup.benefits` |
 
 > **Events note:** visitors' browsers hide events once their date has passed (Pacific time), and the site also rebuilds itself every night around 1 AM Pacific.
 
@@ -87,7 +84,7 @@ Until a photo is set, a grey "Photo placeholder" box shows in its spot. Exec hea
 
 **Crest:** the site only uses the Greek letters ΚΣ. Don't draw or recreate the official crest. If national gives you an approved crest image, upload it and set `site.crestImage` to its path; it appears in the header.
 
-**Link preview image:** when the site link is texted or posted, a white card with the ΚΣ badge and "Reconnect with Nu Alpha." is shown ([`app/opengraph-image.png`](app/opengraph-image.png)). To use a real chapter photo instead, delete that file, add a 1200×630 photo as `app/opengraph-image.jpg`, and update the one-line description in `app/opengraph-image.alt.txt`.
+**Link preview image:** when the site link is texted or posted, a green ΚΣ card is shown ([`app/opengraph-image.png`](app/opengraph-image.png)). To use a real chapter photo instead, delete that file, add a 1200×630 photo as `app/opengraph-image.jpg`, and update the one-line description in `app/opengraph-image.alt.txt`.
 
 ---
 
@@ -222,10 +219,10 @@ app/
   apple-icon.png         iPhone home-screen icon
   opengraph-image.png    Link preview image (+ .alt.txt description)
 components/              One file per page section
-  Header, Hero, StatsBand, OurStory, ChapterToday, Involvement, Events (+ EventList),
+  Header, Hero, StatsBand, OurStory, ChapterToday, Events (+ EventList),
   Campaign, SignupSection + SignupForm, Footer
   PhotoFrame.tsx         Shows a photo, or a placeholder box if none yet
-  KSMark.tsx             The ΚΣ letters and the logo badge
+  KSMark.tsx             The ΚΣ letters
   Icons.tsx              Small line icons
 content/site.ts          ALL editable copy and data
 lib/
@@ -240,22 +237,10 @@ supabase/migrations/     SQL that creates the alumni table and sign-up function
 
 ### Changing colors or fonts
 
-The site uses the official Kappa Sigma colors (scarlet, emerald and white, with gold as an accent). They're defined once at the top of [`app/globals.css`](app/globals.css) under `@theme` (e.g. `--color-emerald: #215732;`). Change a hex value there and it updates across the whole site. Headings use **Plus Jakarta Sans** and body text uses **Inter**, both loaded in [`app/layout.tsx`](app/layout.tsx).
+Colors are defined once at the top of [`app/globals.css`](app/globals.css) under `@theme` (e.g. `--color-primary: #0f4d3a;`). Change a hex value there and it updates across the whole site. Fonts are loaded in [`app/layout.tsx`](app/layout.tsx).
 
 | Token | Hex | Used for |
 | --- | --- | --- |
-| `scarlet` | `#BF0D3E` | Kappa Sigma scarlet (PMS 193): main buttons, highlights, progress bar |
-| `scarlet-dark` / `scarlet-tint` | `#990A32` / `#FBEEF1` | Button hover / soft scarlet backgrounds |
-| `emerald` | `#215732` | Kappa Sigma emerald (PMS 357): headings, logo, campaign panel |
-| `emerald-dark` / `emerald-tint` | `#163B22` / `#F1F6F2` | Footer / soft green section backgrounds |
-| `gold` | `#C99700` | Kappa Sigma gold (PMS 117): small details only (dots, rings, icons). Too light for text |
-| `ink` / `muted` | `#15201A` / `#56625B` | Main text / secondary text |
-| `surface` / `surface-alt` | `#FFFFFF` / `#F7F8F6` | Section backgrounds |
-| `line` / `input-line` | `#E3E8E4` / `#C5CEC8` | Card and form field borders |
-
-If you change the colors, also update `app/icon.svg` (browser tab icon) and swap out `app/apple-icon.png` and `app/opengraph-image.png`.
-
---- | --- | --- |
 | `primary` | `#0F4D3A` | Emerald: header, hero, campaign band |
 | `primary-dark` | `#0A3A2C` | Hero photo placeholder |
 | `accent` | `#B3202E` | Scarlet: main buttons, eyebrow labels, progress bar |

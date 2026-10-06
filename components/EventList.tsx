@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import type { AlumniEvent } from "@/content/site";
 import { formatDay, todayIn } from "@/lib/dates";
-import { ArrowRightIcon, ClockIcon, PinIcon } from "./Icons";
+import { ArrowRightIcon, CalendarIcon, PinIcon } from "./Icons";
 
 type Props = {
   events: AlumniEvent[];
@@ -20,55 +20,53 @@ export default function EventList({ events, buildDay, timeZone, emptyMessage }: 
   const today = useSyncExternalStore(noSubscribe, () => todayIn(timeZone), () => buildDay);
   const upcoming = events.filter((e) => e.date >= today);
 
-  if (upcoming.length === 0) {
-    return <p className="card mt-10 p-8 text-lg text-muted">{emptyMessage}</p>;
-  }
-
   return (
-    <ul className="mt-10 flex flex-col gap-4">
-      {upcoming.map((event) => {
-        const external = event.rsvpUrl.startsWith("http");
-        return (
-          <li
-            key={`${event.date}-${event.title}`}
-            className="card flex flex-col gap-5 p-5 transition-shadow hover:soft-shadow sm:flex-row sm:items-center sm:gap-7 sm:p-6"
-          >
-            <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-2xl bg-scarlet-tint text-scarlet">
-              <span className="text-xs font-bold uppercase tracking-[0.14em]">
-                {formatDay(event.date, { month: "short" })}
-              </span>
-              <span className="heading text-3xl leading-none">{formatDay(event.date, { day: "numeric" })}</span>
-            </div>
-
-            <div className="flex-1">
-              <h3 className="heading text-xl text-emerald">{event.title}</h3>
-              <p className="mt-1 text-muted">{event.description}</p>
-              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted">
-                <span className="inline-flex items-center gap-1.5">
-                  <ClockIcon className="h-4 w-4 text-gold" />
-                  <time dateTime={event.date}>
-                    {formatDay(event.date, { weekday: "short", month: "short", day: "numeric", year: "numeric" })}
-                  </time>
-                  · {event.time}
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <PinIcon className="h-4 w-4 text-gold" />
-                  {event.location}
-                </span>
+    <>
+      {upcoming.length === 0 ? (
+        <p className="card mt-10 p-8 text-lg text-muted">{emptyMessage}</p>
+      ) : (
+        <ul className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {upcoming.map((event) => (
+            <li key={`${event.date}-${event.title}`} className="card flex flex-col p-7 md:p-8">
+              <div className="flex items-start gap-4">
+                <div className="flex w-16 shrink-0 flex-col items-center rounded-md bg-primary py-2 text-white">
+                  <span className="text-xs font-bold uppercase tracking-[0.12em]">
+                    {formatDay(event.date, { month: "short" })}
+                  </span>
+                  <span className="display text-4xl leading-none">
+                    {formatDay(event.date, { day: "numeric" })}
+                  </span>
+                </div>
+                <div className="text-sm text-muted">
+                  <p className="flex items-center gap-2">
+                    <CalendarIcon className="h-4 w-4 shrink-0" />
+                    <time dateTime={event.date}>
+                      {formatDay(event.date, { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
+                    </time>
+                  </p>
+                  <p className="mt-1 pl-6">{event.time}</p>
+                  <p className="mt-1 flex items-center gap-2">
+                    <PinIcon className="h-4 w-4 shrink-0" />
+                    {event.location}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <a
-              href={event.rsvpUrl}
-              className="btn btn-secondary self-start sm:self-center"
-              {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            >
-              RSVP<span className="sr-only"> for {event.title}</span>
-              <ArrowRightIcon className="h-4 w-4" />
-            </a>
-          </li>
-        );
-      })}
-    </ul>
+              <h3 className="display mt-6 text-3xl font-extrabold leading-none">{event.title}</h3>
+              <p className="mt-3 flex-1 text-muted">{event.description}</p>
+
+              <a
+                href={event.rsvpUrl}
+                className="mt-6 inline-flex min-h-[44px] items-center gap-2 self-start font-bold text-accent underline-offset-4 hover:underline"
+                {...(event.rsvpUrl.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                RSVP<span className="sr-only"> for {event.title}</span>
+                <ArrowRightIcon className="h-4 w-4" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 }

@@ -1,16 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Big_Shoulders, Source_Sans_3 } from "next/font/google";
 import { site } from "@/content/site";
 import "./globals.css";
 
-const heading = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+// "Big Shoulders" is the current Google Fonts name for Big Shoulders Display.
+// The opsz axis switches to the display cut automatically at large sizes.
+const display = Big_Shoulders({
+  variable: "--font-big-shoulders",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  axes: ["opsz"],
+  // next/font has no metrics for this font yet, so use a plain fallback stack.
+  adjustFontFallback: false,
+  fallback: ["Arial Narrow", "Arial", "sans-serif"],
 });
 
-const body = Inter({
-  variable: "--font-inter",
+const body = Source_Sans_3({
+  variable: "--font-source-sans",
   subsets: ["latin"],
 });
 
@@ -39,12 +44,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#215732",
+  themeColor: "#0f4d3a",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${heading.variable} ${body.variable}`}>
+    <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>{children}</body>
     </html>
   );
