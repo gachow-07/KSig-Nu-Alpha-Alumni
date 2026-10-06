@@ -65,7 +65,7 @@ export const site = {
   crest: {
     src: "/images/crest.png",
     /** How visible it is: 0 = invisible, 1 = full strength. */
-    opacity: 0.07,
+    opacity: 0.11,
   },
   /**
    * Crest in the header (small, next to the ΚΣ letters). Leave undefined to

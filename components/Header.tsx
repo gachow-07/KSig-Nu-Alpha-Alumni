@@ -7,9 +7,11 @@ import { asset } from "@/lib/paths";
 import KSMark from "./KSMark";
 
 /** How far the page scrolls (px) before the header shrinks. */
-const SHRINK_AFTER = 50;
+export const SHRINK_AFTER = 50;
+/** Header bar height at the top of the page (matches min-h-[72px] below). */
+export const HEADER_HEIGHT = 72;
 /** How much the bar shrinks: 72px → 64px (min-h-[72px] → min-h-16). */
-const COMPACT_DIFF = 8;
+export const COMPACT_DIFF = 8;
 
 export default function Header() {
   const [open, setOpen] = useState(false);
