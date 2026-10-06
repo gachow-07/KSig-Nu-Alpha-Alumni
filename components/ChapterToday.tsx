@@ -16,15 +16,22 @@ function initials(name: string) {
 const AVATAR_RING =
   "ring-2 ring-transparent ring-offset-2 ring-offset-surface transition-shadow duration-300 ease-out group-hover:ring-primary/50";
 
-export default function ChapterToday() {
+type Props = {
+  /** True when this section is shown on its own page: its title becomes the page's main heading (h1). */
+  standalone?: boolean;
+};
+
+export default function ChapterToday({ standalone = false }: Props) {
+  const Heading = standalone ? "h1" : "h2";
+  const SubHeading = standalone ? "h2" : "h3";
   return (
     <section id="today" aria-labelledby="today-heading" className="section-pad bg-surface-alt">
       <div className="container-site relative z-10">
         <div className="max-w-2xl">
           <p className="eyebrow">{chapterToday.eyebrow}</p>
-          <h2 id="today-heading" className="section-heading mt-4">
+          <Heading id="today-heading" className="section-heading mt-4">
             {chapterToday.heading}
-          </h2>
+          </Heading>
           <p className="mt-5 text-muted">{chapterToday.intro}</p>
         </div>
 
@@ -40,7 +47,7 @@ export default function ChapterToday() {
                   hoverZoom
                 />
                 <div className="p-6">
-                  <h3 className="display text-3xl font-extrabold leading-none">{card.title}</h3>
+                  <SubHeading className="display text-3xl font-extrabold leading-none">{card.title}</SubHeading>
                   <p className="mt-3 text-muted">{card.description}</p>
                 </div>
               </div>
@@ -49,7 +56,7 @@ export default function ChapterToday() {
         </ul>
 
         <div className="card mt-10 p-7 md:p-9">
-          <h3 className="display text-3xl font-extrabold">{chapterToday.execHeading}</h3>
+          <SubHeading className="display text-3xl font-extrabold">{chapterToday.execHeading}</SubHeading>
           <ul className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {chapterToday.exec.map((officer, i) => (
               <Reveal as="li" key={officer.title} delay={i * 80} className="group flex items-center gap-4">

@@ -79,12 +79,19 @@ export const site = {
   },
 };
 
+/**
+ * Top bar links. Each one opens its own page (href); the same section also
+ * appears on the landing page (section = its id there).
+ */
 export const nav = [
-  { label: "Our story", href: "#story" },
-  { label: "The chapter", href: "#today" },
-  { label: "Events", href: "#events" },
-  { label: "Give", href: "#give" },
+  { label: "Our story", href: "/story/", section: "story" },
+  { label: "The chapter", href: "/chapter/", section: "today" },
+  { label: "Events", href: "/events/", section: "events" },
+  { label: "Give", href: "/give/", section: "give" },
 ];
+
+/** The red "Reconnect" button in the top bar opens the sign-up page. */
+export const reconnectLink = { label: "Reconnect", href: "/reconnect/", section: "signup" };
 
 // ---------- Hero ----------
 

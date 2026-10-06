@@ -49,7 +49,12 @@ const ROLE_FIELD: FieldConfig = {
   placeholder: "e.g. Project Engineer, Turner Construction",
 };
 
-export default function SignupForm() {
+export default function SignupForm({
+  successHeading: SuccessHeading = "h3",
+}: {
+  /** Heading level for the thank-you message: h3 on the landing page, h2 on the sign-up page. */
+  successHeading?: "h2" | "h3";
+}) {
   const [state, setState] = useState<SubmitResult | { status: "idle" }>({ status: "idle" });
   const [pending, setPending] = useState(false);
   const [succeeded, setSucceeded] = useState(false);
@@ -109,9 +114,9 @@ export default function SignupForm() {
     return (
       <div className="card animate-enter flex flex-col items-start gap-4 p-8 md:p-10" role="status">
         <CheckCircleIcon className="h-12 w-12 text-primary" />
-        <h3 ref={successRef} tabIndex={-1} className="section-heading text-primary outline-none">
+        <SuccessHeading ref={successRef} tabIndex={-1} className="section-heading text-primary outline-none">
           {signup.successHeading}
-        </h3>
+        </SuccessHeading>
         <p className="max-w-xl text-lg text-muted">{signup.successMessage}</p>
       </div>
     );
