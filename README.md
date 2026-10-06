@@ -82,7 +82,7 @@ If you make a mistake, the build fails and the old version stays live, so you ca
 
 Until a photo is set, a grey "Photo placeholder" box shows in its spot. Exec headshots work the same way: add `headshot: "/images/exec/grand-master.jpg"` to an officer; without one, their initials show in a green circle.
 
-**Crest:** the site only uses the Greek letters ΚΣ. Don't draw or recreate the official crest. If national gives you an approved crest image, upload it and set `site.crestImage` to its path; it appears in the header.
+**Crest:** Kappa Sigma headquarters approved using the official crest **next to the hero (the top section) only**. It lives at `public/images/crest.png` and shows faded in the background beside the headline. Don't use it anywhere else on the site, and don't redraw, recolor, crop or stretch it. To adjust how visible it is, change `hero.crest.opacity` in `content/site.ts` (0 = invisible, 1 = full strength; it's 0.18). To swap in an updated file from HQ, upload it over `public/images/crest.png` with the same name. If the file is ever removed, the crest simply disappears; nothing breaks.
 
 **Link preview image:** when the site link is texted or posted, a green ΚΣ card is shown ([`app/opengraph-image.png`](app/opengraph-image.png)). To use a real chapter photo instead, delete that file, add a 1200×630 photo as `app/opengraph-image.jpg`, and update the one-line description in `app/opengraph-image.alt.txt`.
 
