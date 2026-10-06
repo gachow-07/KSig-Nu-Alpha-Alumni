@@ -65,8 +65,10 @@ export const site = {
   /** Time zone used to decide when an event is "past". */
   timeZone: "America/Los_Angeles",
   /**
-   * Optional: an approved crest image from Kappa Sigma national, e.g. "/images/crest.png".
-   * Leave undefined to show only the ΚΣ letters. Do NOT draw or recreate the crest.
+   * Optional: an approved crest image from Kappa Sigma national, e.g. "/images/crest.png"
+   * (a PNG or SVG with a transparent background works best). It appears in the header
+   * and as a large, faded backdrop behind the top of the page. Leave undefined to use
+   * the ΚΣ letters instead. Do NOT draw or recreate the crest.
    */
   crestImage: undefined as string | undefined,
   seo: {

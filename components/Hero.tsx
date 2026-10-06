@@ -1,4 +1,6 @@
-import { hero, stats } from "@/content/site";
+import { hero, site, stats } from "@/content/site";
+import { asset } from "@/lib/paths";
+import KSMark from "./KSMark";
 import PhotoFrame from "./PhotoFrame";
 import { ArrowRightIcon } from "./Icons";
 
@@ -7,9 +9,20 @@ export default function Hero() {
 
   return (
     <section id="top" aria-labelledby="hero-heading" className="relative overflow-hidden bg-surface">
-      {/* Soft brand-colored glow behind the hero. Purely decorative. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-emerald-tint" />
+      {/* Decorative background: a soft emerald wash plus a large, faded crest.
+          Uses the approved crest image from content/site.ts (site.crestImage);
+          until one is added, the ΚΣ letters stand in. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-linear-to-b from-emerald-tint/70 to-surface">
+        {site.crestImage ? (
+          // eslint-disable-next-line @next/next/no-img-element -- decorative backdrop, served as-is
+          <img
+            src={asset(site.crestImage)}
+            alt=""
+            className="absolute left-1/2 top-1/2 h-[92%] w-auto max-w-none -translate-x-1/2 -translate-y-1/2 opacity-[0.08] lg:left-[58%]"
+          />
+        ) : (
+          <KSMark className="absolute left-1/2 top-1/2 h-auto w-[min(820px,130vw)] -translate-x-1/2 -translate-y-1/2 text-emerald opacity-[0.045] lg:left-[58%]" />
+        )}
       </div>
 
       <div className="container-site relative grid items-center gap-12 pb-16 pt-12 md:pt-20 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pb-24">
